@@ -107,7 +107,13 @@ ring_segments = 6
 
 [node name="Tank" type="Node3D" unique_id=857757525]
 script = ExtResource("1_oe8vg")
-Kind = 1
+Kind = 5
+MaxHealth = 150
+Speed = 6.5
+Range = 11
+Damage = 16
+FireInterval = 0.9
+Radius = 1.05
 
 [node name="Body" type="Node3D" parent="." unique_id=309695612]
 

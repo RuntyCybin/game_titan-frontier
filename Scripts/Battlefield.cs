@@ -24,6 +24,7 @@ public partial class Battlefield : Node3D
 	public bool Dragging;
 	public bool Paused => GetTree().Paused;
 	private Node3D _cameraRig = null!;
+	private bool _rotating;
 	private float _zoom = 50, _incomeTime;
 	private readonly RandomNumberGenerator _rng = new();
 	private readonly Dictionary<int, List<CombatEntity>> _groups = new();
@@ -58,6 +59,7 @@ public partial class Battlefield : Node3D
 	[ExportGroup("Production Scenes")]
 	[Export] public PackedScene ScoutScene { get; set; } = null!;
 	[Export] public PackedScene TankScene { get; set; } = null!;
+	[Export] public PackedScene SmallTankScene { get; set; } = null!;
 	[Export] public PackedScene ArtilleryScene { get; set; } = null!;
 	[Export] public PackedScene HeadquartersScene { get; set; } = null!;
 	[Export] public PackedScene ExtractorScene { get; set; } = null!;
@@ -67,7 +69,7 @@ public partial class Battlefield : Node3D
 		var scene = kind switch
 		{
 			UnitKind.Scout => ScoutScene, UnitKind.Tank => TankScene,
-			UnitKind.Artillery => ArtilleryScene, UnitKind.Headquarters => HeadquartersScene,
+			UnitKind.Artillery => ArtilleryScene, UnitKind.SmallTank => SmallTankScene, UnitKind.Headquarters => HeadquartersScene,
 			_ => ExtractorScene
 		};
 		var entity = scene.Instantiate<CombatEntity>();
@@ -101,7 +103,7 @@ public partial class Battlefield : Node3D
 		if (Input.IsPhysicalKeyPressed(Key.S) || Input.IsPhysicalKeyPressed(Key.Down)) pan.Z += 1;
 		if (Input.IsPhysicalKeyPressed(Key.A) || Input.IsPhysicalKeyPressed(Key.Left)) pan.X -= 1;
 		if (Input.IsPhysicalKeyPressed(Key.D) || Input.IsPhysicalKeyPressed(Key.Right)) pan.X += 1;
-		_cameraRig.Position += pan.Normalized() * dt * _zoom * .65f;
+		_cameraRig.Position += _cameraRig.Basis * pan.Normalized() * dt * _zoom * .65f;
 		_cameraRig.Position = new(Mathf.Clamp(_cameraRig.Position.X, -53, 53), 0, Mathf.Clamp(_cameraRig.Position.Z, -53, 53));
 		_incomeTime += dt;
 		if (_incomeTime >= 1)
@@ -133,8 +135,8 @@ public partial class Battlefield : Node3D
 	}
 
 	public int Income => 4 + Entities.Count(e => e.Alive && e.Team == 0 && e.Kind == UnitKind.Extractor) * 12;
-	public static int Cost(UnitKind kind) => kind switch { UnitKind.Scout => 100, UnitKind.Tank => 180, UnitKind.Artillery => 260, _ => 250 };
-	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Scout => 4, UnitKind.Tank => 7, _ => 10 };
+	public static int Cost(UnitKind kind) => kind switch { UnitKind.Scout => 100, UnitKind.Tank => 180, UnitKind.SmallTank => 120, UnitKind.Artillery => 260, _ => 250 };
+	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Scout => 4, UnitKind.Tank => 7, UnitKind.SmallTank => 5, _ => 10 };
 
 	public void Train(UnitKind kind)
 	{
@@ -249,6 +251,14 @@ public partial class Battlefield : Node3D
 				GetViewport().SetInputAsHandled();
 			}
 		}
+		// Hold the middle button and drag horizontally to orbit the camera 360 degrees.
+		if (input is InputEventMouseButton middle && middle.ButtonIndex == MouseButton.Middle)
+			_rotating = middle.Pressed && !Ended && !Paused;
+		if (input is InputEventMouseMotion orbit && _rotating)
+		{
+			if (Ended || Paused) _rotating = false;
+			else _cameraRig.RotateY(-orbit.Relative.X * .006f);
+		}
 		// Release a selection even when the pointer ends over a HUD panel.
 		if (input is InputEventMouseButton release && !release.Pressed && release.ButtonIndex == MouseButton.Left && Dragging)
 		{
@@ -282,6 +292,7 @@ public partial class Battlefield : Node3D
 			{
 				case Key.Q: Train(UnitKind.Scout); break;
 				case Key.E: Train(UnitKind.Tank); break;
+				case Key.T: Train(UnitKind.SmallTank); break;
 				case Key.R: Train(UnitKind.Artillery); break;
 				case Key.B: BuildMode = !BuildMode; AttackOrder = false; break;
 				case Key.F: AttackOrder = true; BuildMode = false; Status = "Haz clic en el destino para avanzar atacando."; break;
