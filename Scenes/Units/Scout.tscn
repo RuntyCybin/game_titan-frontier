@@ -1,0 +1,177 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/CombatEntity.cs" id="1_juk0a"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oag37"]
+albedo_color = Color(0.20392157, 0.29411766, 0.34509805, 1)
+roughness = 0.78
+emission = Color(0.20392157, 0.29411766, 0.34509805, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_te0mc"]
+size = Vector3(1.7, 0.65, 2.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_56bvb"]
+albedo_color = Color(0.09019608, 0.12941177, 0.16862746, 1)
+roughness = 0.78
+emission = Color(0.09019608, 0.12941177, 0.16862746, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_hwjxs"]
+size = Vector3(0.5, 0.6, 2.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c8tqx"]
+albedo_color = Color(0.28235295, 0.89411765, 0.8352941, 1)
+roughness = 0.78
+emission_enabled = true
+emission = Color(0.28235295, 0.89411765, 0.8352941, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_fle1x"]
+size = Vector3(0.18, 0.12, 2.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1yiyu"]
+albedo_color = Color(0.09019608, 0.12941177, 0.16862746, 1)
+roughness = 0.78
+emission = Color(0.09019608, 0.12941177, 0.16862746, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_co6k2"]
+size = Vector3(0.5, 0.6, 2.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_26qmk"]
+albedo_color = Color(0.28235295, 0.89411765, 0.8352941, 1)
+roughness = 0.78
+emission_enabled = true
+emission = Color(0.28235295, 0.89411765, 0.8352941, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_2b43e"]
+size = Vector3(0.18, 0.12, 2.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ku28r"]
+albedo_color = Color(0.32333335, 0.4, 0.44333336, 1)
+roughness = 0.78
+emission = Color(0.32333335, 0.4, 0.44333336, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rd570"]
+top_radius = 0.7
+bottom_radius = 0.7
+height = 0.6
+radial_segments = 8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f0ovo"]
+albedo_color = Color(0.09019608, 0.12941177, 0.16862746, 1)
+roughness = 0.78
+emission = Color(0.09019608, 0.12941177, 0.16862746, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_vtlhr"]
+size = Vector3(0.23, 0.23, 1.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6glfn"]
+albedo_color = Color(0.28235295, 0.89411765, 0.8352941, 1)
+roughness = 0.78
+emission_enabled = true
+emission = Color(0.28235295, 0.89411765, 0.8352941, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_a57ng"]
+size = Vector3(0.4, 0.12, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_57hvb"]
+albedo_color = Color(0.28235295, 0.89411765, 0.8352941, 1)
+roughness = 0.78
+emission_enabled = true
+emission = Color(0.28235295, 0.89411765, 0.8352941, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="TorusMesh" id="TorusMesh_1nyyb"]
+inner_radius = 1.1450001
+outer_radius = 1.255
+rings = 32
+ring_segments = 8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2mnpf"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(0.28235295, 0.89411765, 0.8352941, 0.24)
+
+[sub_resource type="TorusMesh" id="TorusMesh_u7jm8"]
+inner_radius = 9.955
+outer_radius = 10.045
+rings = 128
+ring_segments = 6
+
+[node name="Scout" type="Node3D" unique_id=1236743860]
+script = ExtResource("1_juk0a")
+Kind = 0
+MaxHealth = 80
+Speed = 10
+Range = 10
+Damage = 9
+FireInterval = 0.55
+Radius = 0.85
+
+[node name="Body" type="Node3D" parent="." unique_id=841247046]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
+
+[node name="Hull" type="MeshInstance3D" parent="Body" unique_id=1593882820]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+material_override = SubResource("StandardMaterial3D_oag37")
+mesh = SubResource("BoxMesh_te0mc")
+metadata/team_role = "armor"
+
+[node name="LeftTrack" type="MeshInstance3D" parent="Body" unique_id=354790879]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, 0.4, 0)
+material_override = SubResource("StandardMaterial3D_56bvb")
+mesh = SubResource("BoxMesh_hwjxs")
+
+[node name="LeftTrim" type="MeshInstance3D" parent="Body" unique_id=203242949]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.06, 0.76, 0)
+material_override = SubResource("StandardMaterial3D_c8tqx")
+mesh = SubResource("BoxMesh_fle1x")
+metadata/team_role = "accent"
+
+[node name="RightTrack" type="MeshInstance3D" parent="Body" unique_id=1524227518]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0.4, 0)
+material_override = SubResource("StandardMaterial3D_1yiyu")
+mesh = SubResource("BoxMesh_co6k2")
+
+[node name="RightTrim" type="MeshInstance3D" parent="Body" unique_id=581812205]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.06, 0.76, 0)
+material_override = SubResource("StandardMaterial3D_26qmk")
+mesh = SubResource("BoxMesh_2b43e")
+metadata/team_role = "accent"
+
+[node name="Turret" type="MeshInstance3D" parent="Body" unique_id=306335197]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+material_override = SubResource("StandardMaterial3D_ku28r")
+mesh = SubResource("CylinderMesh_rd570")
+metadata/team_role = "turret"
+
+[node name="Barrel" type="MeshInstance3D" parent="Body" unique_id=646017456]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, -0.8)
+material_override = SubResource("StandardMaterial3D_f0ovo")
+mesh = SubResource("BoxMesh_vtlhr")
+
+[node name="TurretLight" type="MeshInstance3D" parent="Body" unique_id=1136365042]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+material_override = SubResource("StandardMaterial3D_6glfn")
+mesh = SubResource("BoxMesh_a57ng")
+metadata/team_role = "accent"
+
+[node name="SelectionRing" type="MeshInstance3D" parent="." unique_id=316563819]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_57hvb")
+mesh = SubResource("TorusMesh_1nyyb")
+
+[node name="AttackRange" type="MeshInstance3D" parent="." unique_id=1526403137]
+transform = Transform3D(1, 0, 0, 0, 0.08, 0, 0, 0, 1, 0, 0.1, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_2mnpf")
+cast_shadow = 0
+mesh = SubResource("TorusMesh_u7jm8")

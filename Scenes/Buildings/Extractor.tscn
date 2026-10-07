@@ -1,0 +1,106 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/CombatEntity.cs" id="1_esh06"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hhihk"]
+albedo_color = Color(0.09019608, 0.12941177, 0.16862746, 1)
+roughness = 0.78
+emission = Color(0.09019608, 0.12941177, 0.16862746, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ppfy4"]
+top_radius = 2.0
+bottom_radius = 2.0
+height = 0.5
+radial_segments = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tfj7p"]
+albedo_color = Color(0.20392157, 0.29411766, 0.34509805, 1)
+roughness = 0.78
+emission = Color(0.20392157, 0.29411766, 0.34509805, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wpx1t"]
+top_radius = 1.2
+bottom_radius = 1.2
+height = 2.4
+radial_segments = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_srx55"]
+albedo_color = Color(0.28235295, 0.89411765, 0.8352941, 1)
+roughness = 0.78
+emission = Color(0.28235295, 0.89411765, 0.8352941, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_nwwet"]
+top_radius = 0.65
+bottom_radius = 0.65
+height = 3.0
+radial_segments = 6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yi7ep"]
+albedo_color = Color(0.28235295, 0.89411765, 0.8352941, 1)
+roughness = 0.78
+emission_enabled = true
+emission = Color(0.28235295, 0.89411765, 0.8352941, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="TorusMesh" id="TorusMesh_8va0u"]
+inner_radius = 1.445
+outer_radius = 1.555
+rings = 32
+ring_segments = 8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g28uo"]
+albedo_color = Color(0.28235295, 0.89411765, 0.8352941, 1)
+roughness = 0.78
+emission_enabled = true
+emission = Color(0.28235295, 0.89411765, 0.8352941, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="TorusMesh" id="TorusMesh_htld2"]
+inner_radius = 2.2949998
+outer_radius = 2.405
+rings = 32
+ring_segments = 8
+
+[node name="Extractor" type="Node3D" unique_id=1412219846]
+script = ExtResource("1_esh06")
+Kind = 4
+MaxHealth = 350
+Speed = 0
+Range = 0.1
+Damage = 0
+FireInterval = 1
+Radius = 2
+
+[node name="Body" type="Node3D" parent="." unique_id=1359754791]
+
+[node name="Foundation" type="MeshInstance3D" parent="Body" unique_id=2076868660]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+material_override = SubResource("StandardMaterial3D_hhihk")
+mesh = SubResource("CylinderMesh_ppfy4")
+
+[node name="Housing" type="MeshInstance3D" parent="Body" unique_id=772790783]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+material_override = SubResource("StandardMaterial3D_tfj7p")
+mesh = SubResource("CylinderMesh_wpx1t")
+metadata/team_role = "armor"
+
+[node name="Drill" type="MeshInstance3D" parent="Body" unique_id=1186842371]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+material_override = SubResource("StandardMaterial3D_srx55")
+mesh = SubResource("CylinderMesh_nwwet")
+metadata/team_role = "accent"
+
+[node name="EnergyRing" type="MeshInstance3D" parent="Body" unique_id=621486824]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
+material_override = SubResource("StandardMaterial3D_yi7ep")
+mesh = SubResource("TorusMesh_8va0u")
+metadata/team_role = "accent"
+
+[node name="SelectionRing" type="MeshInstance3D" parent="." unique_id=1081052917]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_g28uo")
+mesh = SubResource("TorusMesh_htld2")

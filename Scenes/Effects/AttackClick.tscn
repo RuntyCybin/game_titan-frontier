@@ -1,0 +1,55 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/AttackClick.cs" id="script"]
+
+[sub_resource type="StandardMaterial3D" id="material"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.32, 0.23, 0.72)
+cull_mode = 2
+
+[sub_resource type="TorusMesh" id="ring"]
+inner_radius = 0.975
+outer_radius = 1.025
+rings = 64
+ring_segments = 6
+
+[sub_resource type="BoxMesh" id="horizontal"]
+size = Vector3(0.26, 0.015, 0.045)
+
+[sub_resource type="BoxMesh" id="vertical"]
+size = Vector3(0.045, 0.015, 0.26)
+
+[node name="AttackClick" type="Node3D"]
+position = Vector3(0, 0.16, 0)
+script = ExtResource("script")
+
+[node name="Ring" type="MeshInstance3D" parent="."]
+scale = Vector3(1, 0.1, 1)
+cast_shadow = 0
+mesh = SubResource("ring")
+material_override = SubResource("material")
+
+[node name="Left" type="MeshInstance3D" parent="."]
+position = Vector3(-1.15, 0, 0)
+cast_shadow = 0
+mesh = SubResource("horizontal")
+material_override = SubResource("material")
+
+[node name="Right" type="MeshInstance3D" parent="."]
+position = Vector3(1.15, 0, 0)
+cast_shadow = 0
+mesh = SubResource("horizontal")
+material_override = SubResource("material")
+
+[node name="Top" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0, -1.15)
+cast_shadow = 0
+mesh = SubResource("vertical")
+material_override = SubResource("material")
+
+[node name="Bottom" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0, 1.15)
+cast_shadow = 0
+mesh = SubResource("vertical")
+material_override = SubResource("material")

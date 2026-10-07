@@ -1,0 +1,457 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Scenes/Maps/TitaniumDeposit.tscn" id="deposit"]
+
+[sub_resource type="Environment" id="environment"]
+background_mode = 1
+background_color = Color(0.12, 0.09, 0.07, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.8, 0.68, 0.53, 1)
+ambient_light_energy = 0.5
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="sand"]
+albedo_color = Color(0.38, 0.24, 0.13, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="road"]
+albedo_color = Color(0.24, 0.18, 0.13, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="rock"]
+albedo_color = Color(0.26, 0.15, 0.09, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="pad"]
+albedo_color = Color(0.21, 0.24, 0.25, 1)
+
+[sub_resource type="StandardMaterial3D" id="stripe"]
+albedo_color = Color(0.75, 0.47, 0.19, 1)
+
+[sub_resource type="BoxMesh" id="ground"]
+size = Vector3(120, 0.6, 120)
+
+[sub_resource type="BoxMesh" id="route"]
+size = Vector3(116, 0.035, 12)
+
+[sub_resource type="BoxMesh" id="crossing"]
+size = Vector3(10, 0.035, 116)
+
+[sub_resource type="BoxMesh" id="rockmesh"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxMesh" id="mark"]
+size = Vector3(2, 0.025, 0.16)
+
+[sub_resource type="CylinderMesh" id="platform"]
+top_radius = 9.0
+bottom_radius = 9.0
+height = 0.1
+radial_segments = 8
+
+[sub_resource type="TorusMesh" id="central_ring"]
+inner_radius = 11.85
+outer_radius = 12.0
+rings = 64
+
+[node name="AmberBasin" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("environment")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-48, -25, 0)
+light_color = Color(1, 0.8, 0.59, 1)
+light_energy = 1.25
+shadow_enabled = true
+directional_shadow_max_distance = 140.0
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.4, 0)
+mesh = SubResource("ground")
+material_override = SubResource("sand")
+
+[node name="EastWestRoad" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.06, 0)
+mesh = SubResource("route")
+material_override = SubResource("road")
+
+[node name="NorthSouthRoad" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.04, 0)
+mesh = SubResource("crossing")
+material_override = SubResource("road")
+
+[node name="PlayerPlatform" type="MeshInstance3D" parent="."]
+position = Vector3(-38, -0.02, 18)
+mesh = SubResource("platform")
+material_override = SubResource("pad")
+
+[node name="EnemyPlatform" type="MeshInstance3D" parent="."]
+position = Vector3(36, -0.02, -18)
+mesh = SubResource("platform")
+material_override = SubResource("pad")
+
+[node name="CentralMarking" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.01, 0)
+scale = Vector3(1, 0.1, 1)
+mesh = SubResource("central_ring")
+material_override = SubResource("stripe")
+
+[node name="BorderRocks" type="Node3D" parent="."]
+
+[node name="Rock0" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-56, 2.5, -58)
+rotation_degrees = Vector3(0, 83, 6)
+scale = Vector3(6, 5, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock1" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-46, 2.5, -56)
+rotation_degrees = Vector3(0, 30, 6)
+scale = Vector3(4, 5, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock2" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-36, 2.5, -58)
+rotation_degrees = Vector3(0, 21, 6)
+scale = Vector3(5, 5, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock3" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-26, 3, -58)
+rotation_degrees = Vector3(0, 0, 6)
+scale = Vector3(6, 6, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock4" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-16, 1.5, -55)
+rotation_degrees = Vector3(0, 7, 6)
+scale = Vector3(3, 3, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock5" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-6, 2.5, -55)
+rotation_degrees = Vector3(0, 30, 6)
+scale = Vector3(5, 5, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock6" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(4, 1, -55)
+rotation_degrees = Vector3(0, 52, 6)
+scale = Vector3(4, 2, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock7" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(14, 1.5, -55)
+rotation_degrees = Vector3(0, 30, 6)
+scale = Vector3(7, 3, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock8" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(24, 3, -56)
+rotation_degrees = Vector3(0, 69, 6)
+scale = Vector3(7, 6, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock9" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(34, 2.5, -56)
+rotation_degrees = Vector3(0, 72, 6)
+scale = Vector3(6, 5, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock10" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(44, 2, -56)
+rotation_degrees = Vector3(0, 28, 6)
+scale = Vector3(5, 4, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock11" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-56, 2.5, 55)
+rotation_degrees = Vector3(0, 42, 6)
+scale = Vector3(3, 5, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock12" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-46, 1, 56)
+rotation_degrees = Vector3(0, 22, 6)
+scale = Vector3(7, 2, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock13" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-36, 2.5, 57)
+rotation_degrees = Vector3(0, 12, 6)
+scale = Vector3(5, 5, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock14" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-26, 1.5, 55)
+rotation_degrees = Vector3(0, 34, 6)
+scale = Vector3(6, 3, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock15" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-16, 2.5, 56)
+rotation_degrees = Vector3(0, 40, 6)
+scale = Vector3(4, 5, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock16" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-6, 1, 57)
+rotation_degrees = Vector3(0, 7, 6)
+scale = Vector3(6, 2, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock17" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(4, 3, 58)
+rotation_degrees = Vector3(0, 42, 6)
+scale = Vector3(6, 6, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock18" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(14, 1.5, 57)
+rotation_degrees = Vector3(0, 58, 6)
+scale = Vector3(6, 3, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock19" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(24, 1, 55)
+rotation_degrees = Vector3(0, 48, 6)
+scale = Vector3(4, 2, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock20" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(34, 3, 58)
+rotation_degrees = Vector3(0, 2, 6)
+scale = Vector3(4, 6, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock21" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(44, 2.5, 56)
+rotation_degrees = Vector3(0, 60, 6)
+scale = Vector3(6, 5, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock22" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-55, 2.5, -56)
+rotation_degrees = Vector3(0, 9, 6)
+scale = Vector3(5, 5, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock23" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-58, 1.5, -46)
+rotation_degrees = Vector3(0, 72, 6)
+scale = Vector3(5, 3, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock24" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-56, 1, -36)
+rotation_degrees = Vector3(0, 78, 6)
+scale = Vector3(5, 2, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock25" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-58, 3, -26)
+rotation_degrees = Vector3(0, 40, 6)
+scale = Vector3(5, 6, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock26" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-56, 2, -16)
+rotation_degrees = Vector3(0, 16, 6)
+scale = Vector3(6, 4, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock27" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-55, 3, -6)
+rotation_degrees = Vector3(0, 8, 6)
+scale = Vector3(7, 6, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock28" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-58, 1.5, 4)
+rotation_degrees = Vector3(0, 40, 6)
+scale = Vector3(5, 3, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock29" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-56, 1.5, 14)
+rotation_degrees = Vector3(0, 0, 6)
+scale = Vector3(3, 3, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock30" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-56, 1, 24)
+rotation_degrees = Vector3(0, 28, 6)
+scale = Vector3(7, 2, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock31" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-56, 2, 34)
+rotation_degrees = Vector3(0, 25, 6)
+scale = Vector3(5, 4, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock32" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(-58, 3, 44)
+rotation_degrees = Vector3(0, 2, 6)
+scale = Vector3(4, 6, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock33" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(57, 2, -56)
+rotation_degrees = Vector3(0, 87, 6)
+scale = Vector3(6, 4, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock34" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(56, 3, -46)
+rotation_degrees = Vector3(0, 80, 6)
+scale = Vector3(5, 6, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock35" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(55, 2.5, -36)
+rotation_degrees = Vector3(0, 26, 6)
+scale = Vector3(5, 5, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock36" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(57, 2, -26)
+rotation_degrees = Vector3(0, 60, 6)
+scale = Vector3(3, 4, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock37" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(58, 3, -16)
+rotation_degrees = Vector3(0, 8, 6)
+scale = Vector3(4, 6, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock38" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(55, 2, -6)
+rotation_degrees = Vector3(0, 65, 6)
+scale = Vector3(5, 4, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock39" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(55, 1, 4)
+rotation_degrees = Vector3(0, 82, 6)
+scale = Vector3(3, 2, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock40" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(58, 2, 14)
+rotation_degrees = Vector3(0, 30, 6)
+scale = Vector3(4, 4, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock41" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(57, 3, 24)
+rotation_degrees = Vector3(0, 50, 6)
+scale = Vector3(5, 6, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock42" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(57, 2, 34)
+rotation_degrees = Vector3(0, 54, 6)
+scale = Vector3(3, 4, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+[node name="Rock43" type="MeshInstance3D" parent="BorderRocks"]
+position = Vector3(57, 1, 44)
+rotation_degrees = Vector3(0, 69, 6)
+scale = Vector3(7, 2, 4)
+mesh = SubResource("rockmesh")
+material_override = SubResource("rock")
+
+[node name="RoadMarkings" type="Node3D" parent="."]
+
+[node name="Mark0" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(-51, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark1" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(-45, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark2" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(-39, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark3" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(-33, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark4" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(-27, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark5" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(-21, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark6" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(-15, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark7" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(-9, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark8" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(-3, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark9" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(3, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark10" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(9, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark11" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(15, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark12" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(21, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark13" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(27, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark14" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(33, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark15" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(39, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark16" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(45, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+[node name="Mark17" type="MeshInstance3D" parent="RoadMarkings"]
+position = Vector3(51, 0.01, 0)
+mesh = SubResource("mark")
+material_override = SubResource("stripe")
+
+[node name="Deposits" type="Node3D" parent="."]
+
+[node name="Deposit0" parent="Deposits" instance=ExtResource("deposit")]
+position = Vector3(-46, 0, 8)
+[node name="Deposit1" parent="Deposits" instance=ExtResource("deposit")]
+position = Vector3(-22, 0, 5)
+[node name="Deposit2" parent="Deposits" instance=ExtResource("deposit")]
+position = Vector3(-3, 0, -28)
+[node name="Deposit3" parent="Deposits" instance=ExtResource("deposit")]
+position = Vector3(0, 0, 0)
+[node name="Deposit4" parent="Deposits" instance=ExtResource("deposit")]
+position = Vector3(5, 0, 28)
+[node name="Deposit5" parent="Deposits" instance=ExtResource("deposit")]
+position = Vector3(22, 0, -5)
+[node name="Deposit6" parent="Deposits" instance=ExtResource("deposit")]
+position = Vector3(45, 0, -8)

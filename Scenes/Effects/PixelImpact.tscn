@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/PixelImpact.cs" id="script"]
+
+[sub_resource type="StandardMaterial3D" id="pixel_material"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 1
+cull_mode = 2
+
+[sub_resource type="QuadMesh" id="pixel"]
+material = SubResource("pixel_material")
+size = Vector2(0.17, 0.17)
+
+[sub_resource type="Gradient" id="colors"]
+offsets = PackedFloat32Array(0, 0.25, 0.65, 1)
+colors = PackedColorArray(1, 0.94, 0.65, 1, 1, 0.66, 0.22, 1, 0.95, 0.25, 0.06, 0.8, 0.35, 0.12, 0.06, 0)
+
+[node name="PixelImpact" type="CPUParticles3D"]
+cast_shadow = 0
+emitting = false
+amount = 14
+lifetime = 0.45
+one_shot = true
+explosiveness = 1.0
+randomness = 0.25
+local_coords = false
+mesh = SubResource("pixel")
+direction = Vector3(0, 1, 0)
+spread = 125.0
+gravity = Vector3(0, -6, 0)
+initial_velocity_min = 1.8
+initial_velocity_max = 4.5
+damping_min = 1.0
+damping_max = 2.0
+scale_amount_min = 0.6
+scale_amount_max = 1.35
+color_ramp = SubResource("colors")
+script = ExtResource("script")

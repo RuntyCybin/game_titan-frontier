@@ -1,0 +1,4 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://Tests/MenuFlow.cs" id="1"]
+[node name="MenuFlow" type="Node"]
+script = ExtResource("1")

@@ -1,0 +1,253 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/MainMenu.cs" id="menu"]
+[ext_resource type="Script" path="res://Scripts/MapPreview.cs" id="preview"]
+[ext_resource type="PackedScene" path="res://Scenes/Main.tscn" id="frontier"]
+[ext_resource type="PackedScene" path="res://Scenes/AmberSkirmish.tscn" id="amber"]
+
+[sub_resource type="StyleBoxFlat" id="panel"]
+bg_color = Color(0.063, 0.114, 0.153, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18, 0.28, 0.32, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_left = 10
+corner_radius_bottom_right = 10
+content_margin_left = 24.0
+content_margin_top = 22.0
+content_margin_right = 24.0
+content_margin_bottom = 22.0
+
+[sub_resource type="StyleBoxFlat" id="button"]
+bg_color = Color(0.10, 0.20, 0.24, 1)
+border_width_bottom = 1
+border_color = Color(0.27, 0.42, 0.46, 1)
+content_margin_left = 24.0
+content_margin_right = 24.0
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="active"]
+bg_color = Color(0.13, 0.33, 0.35, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.28, 0.89, 0.84, 1)
+content_margin_left = 24.0
+content_margin_right = 24.0
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.76, 0.99, 0.94, 0.8)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_left = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="Theme" id="theme"]
+default_font_size = 16
+Label/colors/font_color = Color(0.83, 0.89, 0.92, 1)
+Button/colors/font_color = Color(0.83, 0.96, 0.95, 1)
+Button/font_sizes/font_size = 14
+Button/styles/normal = SubResource("button")
+Button/styles/hover = SubResource("active")
+Button/styles/pressed = SubResource("active")
+Button/styles/hover_pressed = SubResource("active")
+Button/styles/focus = SubResource("focus")
+PanelContainer/styles/panel = SubResource("panel")
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("theme")
+script = ExtResource("menu")
+FrontierScene = ExtResource("frontier")
+AmberScene = ExtResource("amber")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.031, 0.063, 0.086, 1)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 32
+
+[node name="Content" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Brand" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.28, 0.89, 0.84, 1)
+theme_override_font_sizes/font_size = 19
+text = "C Y B I N  / /  R T S                                 COMANDO DE OPERACIONES"
+
+[node name="Title" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 46
+text = "Elige tu campo de batalla."
+
+[node name="Subtitle" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.65, 0.70, 1)
+text = "Despliega tus fuerzas, asegura el titanio y destruye el mando enemigo."
+
+[node name="Cards" type="HBoxContainer" parent="Margin/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="Frontier" type="PanelContainer" parent="Margin/Content/Cards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Content" type="VBoxContainer" parent="Margin/Content/Cards/Frontier"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Tag" type="Label" parent="Margin/Content/Cards/Frontier/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.28, 0.89, 0.84, 1)
+theme_override_font_sizes/font_size = 12
+text = "01  /  ZONA INDUSTRIAL"
+
+[node name="Preview" type="Control" parent="Margin/Content/Cards/Frontier/Content"]
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("preview")
+BattleScene = ExtResource("frontier")
+
+[node name="Title" type="Label" parent="Margin/Content/Cards/Frontier/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 27
+text = "Frontera de Titanio"
+
+[node name="Description" type="Label" parent="Margin/Content/Cards/Frontier/Content"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.58, 0.68, 0.73, 1)
+text = "Un frente diagonal entre complejos industriales.\nAsegura los depósitos del corredor central."
+autowrap_mode = 3
+
+[node name="Facts" type="Label" parent="Margin/Content/Cards/Frontier/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "120 × 120 m     /     5 depósitos     /     Suroeste ↗ noreste"
+
+[node name="Select" type="Button" parent="Margin/Content/Cards/Frontier/Content"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+toggle_mode = true
+text = "SELECCIONAR MAPA"
+mouse_default_cursor_shape = 2
+
+[node name="Amber" type="PanelContainer" parent="Margin/Content/Cards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Content" type="VBoxContainer" parent="Margin/Content/Cards/Amber"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Tag" type="Label" parent="Margin/Content/Cards/Amber/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.74, 0.43, 1)
+theme_override_font_sizes/font_size = 12
+text = "02  /  CUENCA DESÉRTICA"
+
+[node name="Preview" type="Control" parent="Margin/Content/Cards/Amber/Content"]
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("preview")
+BattleScene = ExtResource("amber")
+TerrainColor = Color(0.25, 0.17, 0.11, 1)
+
+[node name="Title" type="Label" parent="Margin/Content/Cards/Amber/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 27
+text = "Cuenca de Ámbar"
+
+[node name="Description" type="Label" parent="Margin/Content/Cards/Amber/Content"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.58, 0.68, 0.73, 1)
+text = "Una llanura de arena entre formaciones rocosas.\nExpándete hacia los recursos del norte y del sur."
+autowrap_mode = 3
+
+[node name="Facts" type="Label" parent="Margin/Content/Cards/Amber/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "120 × 120 m     /     7 depósitos     /     Oeste → este"
+
+[node name="Select" type="Button" parent="Margin/Content/Cards/Amber/Content"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+toggle_mode = true
+text = "SELECCIONAR MAPA"
+mouse_default_cursor_shape = 2
+
+[node name="Legend" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.65, 0.70, 1)
+theme_override_font_sizes/font_size = 12
+text = "VISTA TÁCTICA    /    Turquesa: tu base    ·    Coral: enemigo    ·    Ámbar: titanio"
+
+[node name="Selected" type="Label" parent="Margin/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.28, 0.89, 0.84, 1)
+text = "Selecciona un mapa para comenzar."
+
+[node name="Footer" type="HBoxContainer" parent="Margin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Hint" type="Label" parent="Margin/Content/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.55, 0.65, 0.70, 1)
+text = "ESCARAMUZA  /  Construye. Expande. Conquista."
+
+[node name="Exit" type="Button" parent="Margin/Content/Footer"]
+custom_minimum_size = Vector2(110, 58)
+layout_mode = 2
+text = "SALIR"
+mouse_default_cursor_shape = 2
+
+[node name="Play" type="Button" parent="Margin/Content/Footer"]
+custom_minimum_size = Vector2(300, 58)
+layout_mode = 2
+theme_override_styles/normal = SubResource("active")
+text = "INICIAR ESCARAMUZA   →"
+mouse_default_cursor_shape = 2

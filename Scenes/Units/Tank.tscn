@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://je56j87ysqj4"]
+
+[ext_resource type="Script" uid="uid://btl5xcnhqysar" path="res://Scripts/CombatEntity.cs" id="1_vgw0t"]
+
+[ext_resource type="PackedScene" path="res://Scenes/Units/Models/AbramsBody.tscn" id="2_abrams"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ic60w"]
+albedo_color = Color(0.28235295, 0.89411765, 0.8352941, 1)
+roughness = 0.78
+emission_enabled = true
+emission = Color(0.28235295, 0.89411765, 0.8352941, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="TorusMesh" id="TorusMesh_4531x"]
+inner_radius = 1.5450001
+outer_radius = 1.655
+rings = 32
+ring_segments = 8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u4s3f"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(0.28235295, 0.89411765, 0.8352941, 0.24)
+
+[sub_resource type="TorusMesh" id="TorusMesh_xtnpf"]
+inner_radius = 12.955
+outer_radius = 13.045
+rings = 128
+ring_segments = 6
+
+[node name="Tank" type="Node3D" unique_id=857757525]
+script = ExtResource("1_vgw0t")
+Kind = 1
+
+[node name="Body" parent="." instance=ExtResource("2_abrams")]
+
+[node name="SelectionRing" type="MeshInstance3D" parent="." unique_id=1912013104]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_ic60w")
+mesh = SubResource("TorusMesh_4531x")
+
+[node name="AttackRange" type="MeshInstance3D" parent="." unique_id=1913877027]
+transform = Transform3D(1, 0, 0, 0, 0.08, 0, 0, 0, 1, 0, 0.1, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_u4s3f")
+cast_shadow = 0
+mesh = SubResource("TorusMesh_xtnpf")

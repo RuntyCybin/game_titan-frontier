@@ -1,0 +1,66 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://Scripts/Battlefield.cs" id="1"]
+[ext_resource type="PackedScene" path="res://Scenes/Maps/AmberBasin.tscn" id="2_map"]
+[ext_resource type="PackedScene" path="res://Scenes/Units/Scout.tscn" id="3_scout"]
+[ext_resource type="PackedScene" path="res://Scenes/Units/Tank.tscn" id="4_tank"]
+[ext_resource type="PackedScene" path="res://Scenes/Units/Artillery.tscn" id="5_artillery"]
+[ext_resource type="PackedScene" path="res://Scenes/Buildings/Headquarters.tscn" id="6_hq"]
+[ext_resource type="PackedScene" path="res://Scenes/Buildings/Extractor.tscn" id="7_extractor"]
+
+[node name="Battlefield" type="Node3D"]
+script = ExtResource("1")
+MapTitle = "CUENCA DE ÁMBAR"
+ObjectiveText = "Destruye el mando enemigo al este."
+ScoutScene = ExtResource("3_scout")
+TankScene = ExtResource("4_tank")
+ArtilleryScene = ExtResource("5_artillery")
+HeadquartersScene = ExtResource("6_hq")
+ExtractorScene = ExtResource("7_extractor")
+
+[node name="Map" parent="." instance=ExtResource("2_map")]
+
+[node name="CameraRig" type="Node3D" parent="."]
+position = Vector3(-28, 0, 14)
+
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+position = Vector3(0, 55, 42)
+rotation = Vector3(-0.918625, 0, 0)
+projection = 1
+current = true
+size = 50.0
+far = 350.0
+
+[node name="PlayerHeadquarters" parent="." instance=ExtResource("6_hq")]
+position = Vector3(-38, 0, 18)
+
+[node name="EnemyHeadquarters" parent="." instance=ExtResource("6_hq")]
+position = Vector3(36, 0, -18)
+Team = 1
+
+[node name="PlayerExtractor" parent="." instance=ExtResource("7_extractor")]
+position = Vector3(-46, 0, 8)
+
+[node name="EnemyExtractor" parent="." instance=ExtResource("7_extractor")]
+position = Vector3(45, 0, -8)
+Team = 1
+
+[node name="PlayerTank1" parent="." instance=ExtResource("4_tank")]
+position = Vector3(-34, 0, 9)
+
+[node name="PlayerTank2" parent="." instance=ExtResource("4_tank")]
+position = Vector3(-29, 0, 11)
+
+[node name="PlayerScout" parent="." instance=ExtResource("3_scout")]
+position = Vector3(-39, 0, 7)
+
+[node name="PlayerArtillery" parent="." instance=ExtResource("5_artillery")]
+position = Vector3(-33, 0, 15)
+
+[node name="EnemyTank1" parent="." instance=ExtResource("4_tank")]
+position = Vector3(29, 0, -13)
+Team = 1
+
+[node name="EnemyTank2" parent="." instance=ExtResource("4_tank")]
+position = Vector3(35, 0, -9)
+Team = 1
