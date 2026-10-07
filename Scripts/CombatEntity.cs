@@ -2,7 +2,7 @@ using Godot;
 
 namespace Cybin;
 
-public enum UnitKind { Scout, Tank, Artillery, Headquarters, Extractor }
+public enum UnitKind { Scout, Tank, Artillery, Headquarters, Extractor, SmallTank }
 
 [Tool]
 public partial class CombatEntity : Node3D
@@ -23,9 +23,9 @@ public partial class CombatEntity : Node3D
 	public Vector3 Destination;
 	public CombatEntity? Target;
 	public bool Moving, Selected, AttackMove;
-	public bool IsBuilding => Kind >= UnitKind.Headquarters;
+	public bool IsBuilding => Kind == UnitKind.Headquarters || Kind == UnitKind.Extractor;
 	public bool Alive => Health > 0 && !IsQueuedForDeletion();
-	public string DisplayName => Kind switch { UnitKind.Scout => "EXPLORADOR", UnitKind.Tank => "TANQUE BASTIÓN", UnitKind.Artillery => "ARTILLERÍA", UnitKind.Headquarters => "CENTRO DE MANDO", _ => "EXTRACTOR" };
+	public string DisplayName => Kind switch { UnitKind.Scout => "EXPLORADOR", UnitKind.Tank => "TANQUE BASTIÓN", UnitKind.Artillery => "ARTILLERÍA", UnitKind.SmallTank => "TANQUE PEQUEÑO", UnitKind.Headquarters => "CENTRO DE MANDO", _ => "EXTRACTOR" };
 	private MeshInstance3D _ring = null!;
 	private MeshInstance3D? _rangeRing;
 	private Node3D _body = null!;

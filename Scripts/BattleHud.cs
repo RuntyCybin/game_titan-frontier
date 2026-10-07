@@ -47,6 +47,7 @@ public partial class BattleHud : Control
         var buttons = new HBoxContainer(); production.AddChild(buttons);
         Button(buttons, "[Q] EXPLORADOR\n100 Ti · 4 s", "Rápido, ideal para asegurar depósitos.", () => Battle.Train(UnitKind.Scout));
         Button(buttons, "[E] BASTIÓN\n180 Ti · 7 s", "Blindado de primera línea.", () => Battle.Train(UnitKind.Tank));
+        Button(buttons, "[T] TANQUE PEQUEÑO\n120 Ti · 5 s", "Blindado ligero y barato.", () => Battle.Train(UnitKind.SmallTank));
         Button(buttons, "[R] ARTILLERÍA\n260 Ti · 10 s", "Gran alcance y daño de área; frágil.", () => Battle.Train(UnitKind.Artillery));
         Button(buttons, "[B] EXTRACTOR\n250 Ti · +12/s", "Despliega sobre un depósito a menos de 18 m de tus fuerzas.", () => { if (!Battle.Ended && !Battle.Paused) { Battle.BuildMode = !Battle.BuildMode; Battle.AttackOrder = false; } });
         _queue = Text(production, "", 13, _muted);

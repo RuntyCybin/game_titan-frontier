@@ -59,6 +59,7 @@ public partial class Battlefield : Node3D
 	[ExportGroup("Production Scenes")]
 	[Export] public PackedScene ScoutScene { get; set; } = null!;
 	[Export] public PackedScene TankScene { get; set; } = null!;
+	[Export] public PackedScene SmallTankScene { get; set; } = null!;
 	[Export] public PackedScene ArtilleryScene { get; set; } = null!;
 	[Export] public PackedScene HeadquartersScene { get; set; } = null!;
 	[Export] public PackedScene ExtractorScene { get; set; } = null!;
@@ -68,7 +69,7 @@ public partial class Battlefield : Node3D
 		var scene = kind switch
 		{
 			UnitKind.Scout => ScoutScene, UnitKind.Tank => TankScene,
-			UnitKind.Artillery => ArtilleryScene, UnitKind.Headquarters => HeadquartersScene,
+			UnitKind.Artillery => ArtilleryScene, UnitKind.SmallTank => SmallTankScene, UnitKind.Headquarters => HeadquartersScene,
 			_ => ExtractorScene
 		};
 		var entity = scene.Instantiate<CombatEntity>();
@@ -134,8 +135,8 @@ public partial class Battlefield : Node3D
 	}
 
 	public int Income => 4 + Entities.Count(e => e.Alive && e.Team == 0 && e.Kind == UnitKind.Extractor) * 12;
-	public static int Cost(UnitKind kind) => kind switch { UnitKind.Scout => 100, UnitKind.Tank => 180, UnitKind.Artillery => 260, _ => 250 };
-	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Scout => 4, UnitKind.Tank => 7, _ => 10 };
+	public static int Cost(UnitKind kind) => kind switch { UnitKind.Scout => 100, UnitKind.Tank => 180, UnitKind.SmallTank => 120, UnitKind.Artillery => 260, _ => 250 };
+	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Scout => 4, UnitKind.Tank => 7, UnitKind.SmallTank => 5, _ => 10 };
 
 	public void Train(UnitKind kind)
 	{
@@ -291,6 +292,7 @@ public partial class Battlefield : Node3D
 			{
 				case Key.Q: Train(UnitKind.Scout); break;
 				case Key.E: Train(UnitKind.Tank); break;
+				case Key.T: Train(UnitKind.SmallTank); break;
 				case Key.R: Train(UnitKind.Artillery); break;
 				case Key.B: BuildMode = !BuildMode; AttackOrder = false; break;
 				case Key.F: AttackOrder = true; BuildMode = false; Status = "Haz clic en el destino para avanzar atacando."; break;
