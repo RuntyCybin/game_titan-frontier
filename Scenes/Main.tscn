@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://Scenes/Units/Scout.tscn" id="3_scout"]
 [ext_resource type="PackedScene" uid="uid://je56j87ysqj4" path="res://Scenes/Units/Tank.tscn" id="4_tank"]
 [ext_resource type="PackedScene" path="res://Scenes/Units/Artillery.tscn" id="5_artillery"]
+[ext_resource type="PackedScene" path="res://Scenes/Units/SmallTank.tscn" id="8_smalltank"]
 [ext_resource type="PackedScene" path="res://Scenes/Buildings/Headquarters.tscn" id="6_hq"]
 [ext_resource type="PackedScene" path="res://Scenes/Buildings/Extractor.tscn" id="7_extractor"]
 
@@ -13,6 +14,7 @@ script = ExtResource("1")
 ScoutScene = ExtResource("3_scout")
 TankScene = ExtResource("4_tank")
 ArtilleryScene = ExtResource("5_artillery")
+SmallTankScene = ExtResource("8_smalltank")
 HeadquartersScene = ExtResource("6_hq")
 ExtractorScene = ExtResource("7_extractor")
 
