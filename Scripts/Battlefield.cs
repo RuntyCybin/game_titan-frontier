@@ -16,7 +16,9 @@ public partial class Battlefield : Node3D
 	public Camera3D Camera = null!;
 	public CombatEntity PlayerBase = null!, EnemyBase = null!;
 	public BattleHud Hud = null!;
-	public int Credits = 700, Wave;
+	public const int DepositTotal = 100000, BaseIncome = 20, ExtractorRate = 60, ExtractorCost = 1000;
+	public int Credits = 4000, Wave;
+	public float[] DepositReserve = System.Array.Empty<float>();
 	public float NextWave = 55, ProductionRemaining;
 	public bool Ended, Won, BuildMode, AttackOrder;
 	public string Status = "Selecciona tus vehículos y asegura los depósitos de titanio.";
@@ -49,6 +51,7 @@ public partial class Battlefield : Node3D
 		EnemyBase = Entities.Single(e => e.Kind == UnitKind.Headquarters && e.Team == 1);
 		foreach (var deposit in GetNode<Node3D>("Map/Deposits").GetChildren().OfType<Node3D>())
 			Deposits.Add(ToLocal(deposit.GlobalPosition));
+		DepositReserve = Deposits.Select(_ => (float)DepositTotal).ToArray();
 		_buildPreview = Visuals.Ring(this, 2.8f, Visuals.Cyan); _buildPreview.Visible = false;
 		var canvas = new CanvasLayer(); AddChild(canvas);
 		Hud = new BattleHud { Battle = this }; canvas.AddChild(Hud);
@@ -88,7 +91,7 @@ public partial class Battlefield : Node3D
 		{
 			bool moved = Entities.Any(e => e.Team == 0 && !e.IsBuilding && e.Position.X > -20);
 			bool produced = Production.Count == 0 && Entities.Count(e => e.Team == 0 && e.Kind == UnitKind.Scout) == 2;
-			bool earned = Credits > 350;
+			bool earned = Credits > 4000 - Cost(UnitKind.Scout);
 			Hud.TogglePause(); bool paused = Paused; Hud.TogglePause();
 			PlayerBase.TakeDamage(99999);
 			bool defeat = Ended && !Won;
@@ -109,7 +112,7 @@ public partial class Battlefield : Node3D
 		if (_incomeTime >= 1)
 		{
 			_incomeTime -= 1;
-			Credits += Income;
+			Credits += Mine();
 		}
 		if (Production.Count > 0)
 		{
@@ -134,8 +137,25 @@ public partial class Battlefield : Node3D
 		}
 	}
 
-	public int Income => 4 + Entities.Count(e => e.Alive && e.Team == 0 && e.Kind == UnitKind.Extractor) * 12;
-	public static int Cost(UnitKind kind) => kind switch { UnitKind.Scout => 100, UnitKind.Tank => 180, UnitKind.SmallTank => 120, UnitKind.Artillery => 260, _ => 250 };
+	public int DepositIndex(Vector3 position) => Deposits.Select((p, i) => (p, i)).OrderBy(x => x.p.DistanceSquaredTo(position)).First().i;
+	public int TotalReserve => Mathf.RoundToInt(DepositReserve.Sum());
+	private bool Mining(CombatEntity e) => e.Alive && e.Kind == UnitKind.Extractor && DepositReserve[DepositIndex(e.Position)] > 0;
+	// Income per second for the player: base income plus every extractor whose deposit still has coins.
+	public int Income => BaseIncome + Entities.Count(e => e.Team == 0 && Mining(e)) * ExtractorRate;
+	// Extractors of both teams drain their deposit; only the player's yield is credited.
+	private int Mine()
+	{
+		int gained = BaseIncome;
+		foreach (var extractor in Entities.Where(Mining).ToList())
+		{
+			int i = DepositIndex(extractor.Position);
+			float taken = Mathf.Min(ExtractorRate, DepositReserve[i]);
+			DepositReserve[i] -= taken;
+			if (extractor.Team == 0) gained += Mathf.RoundToInt(taken);
+		}
+		return gained;
+	}
+	public static int Cost(UnitKind kind) => kind switch { UnitKind.Scout => 300, UnitKind.Tank => 1000, UnitKind.SmallTank => 600, UnitKind.Artillery => 2000, _ => ExtractorCost };
 	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Scout => 4, UnitKind.Tank => 7, UnitKind.SmallTank => 5, _ => 10 };
 
 	public void Train(UnitKind kind)
@@ -143,7 +163,7 @@ public partial class Battlefield : Node3D
 		if (Ended || Paused) return;
 		if (Production.Count >= 8) { Status = "Cola completa: máximo 8 vehículos."; return; }
 		if (Entities.Count(e => e.Team == 0 && !e.IsBuilding) + Production.Count >= 60) { Status = "Límite de ejército: 60 vehículos."; return; }
-		if (Credits < Cost(kind)) { Status = "Titanio insuficiente."; return; }
+		if (Credits < Cost(kind)) { Status = "Monedas insuficientes."; return; }
 		Credits -= Cost(kind);
 		if (Production.Count == 0) ProductionRemaining = BuildTime(kind);
 		Production.Enqueue(kind); Status = "Fabricación iniciada.";
@@ -156,9 +176,10 @@ public partial class Battlefield : Node3D
 		if (deposit.DistanceTo(position) > 5) { Status = "Coloca el extractor sobre un depósito luminoso."; return false; }
 		if (Entities.Any(e => e.Alive && e.IsBuilding && e.Position.DistanceTo(deposit) < 5)) { Status = "Este depósito ya está ocupado."; return false; }
 		if (!Entities.Any(e => e.Alive && e.Team == 0 && e.Position.DistanceTo(deposit) < 18)) { Status = "Acerca una unidad a menos de 18 m del depósito."; return false; }
-		if (Credits < 250) { Status = "Necesitas 250 de titanio."; return false; }
-		Credits -= 250; Spawn(UnitKind.Extractor, 0, deposit); BuildMode = false;
-		Status = "Extractor operativo. +12 titanio por segundo."; return true;
+		if (DepositReserve[DepositIndex(deposit)] <= 0) { Status = "Este depósito está agotado."; return false; }
+		if (Credits < ExtractorCost) { Status = $"Necesitas {ExtractorCost} monedas."; return false; }
+		Credits -= ExtractorCost; Spawn(UnitKind.Extractor, 0, deposit); BuildMode = false;
+		Status = $"Extractor operativo. +{ExtractorRate} monedas por segundo."; return true;
 	}
 
 	private void LaunchWave()
@@ -222,6 +243,11 @@ public partial class Battlefield : Node3D
 		// Lives independently of the destroyed unit and cleans itself up when finished.
 		AddChild(explosion);
 		Selection.Remove(entity); Entities.Remove(entity);
+		if (entity.Team == 1 && !entity.IsBuilding)
+		{
+			int bounty = Cost(entity.Kind) / 10;
+			Credits += bounty; Status = $"{entity.DisplayName} enemigo destruido · +{bounty} monedas.";
+		}
 		if (entity.Kind == UnitKind.Headquarters)
 		{
 			Ended = true; Won = entity.Team == 1;
@@ -365,7 +391,7 @@ public partial class Battlefield : Node3D
 	{
 		try
 		{
-			if (Entities.Count != 10 || Income != 16) throw new Exception("Initial economy/entities");
+			if (Entities.Count != 10 || Income != BaseIncome + ExtractorRate) throw new Exception("Initial economy/entities");
 			var editedTank = TankScene.Instantiate<CombatEntity>();
 			editedTank.MaxHealth = 333;
 			editedTank.Range = 17;
@@ -382,9 +408,9 @@ public partial class Battlefield : Node3D
 			if (originalColor != Visuals.Cyan || enemyColor != Visuals.Red) throw new Exception("Independent team materials");
 			editedTank.Free();
 			Train(UnitKind.Scout);
-			if (Credits != 600 || Production.Count != 1) throw new Exception("Production payment");
+			if (Credits != 4000 - Cost(UnitKind.Scout) || Production.Count != 1) throw new Exception("Production payment");
 			ProductionRemaining = .01f;
-			if (!BuildExtractor(Deposits[1]) || Income != 28) throw new Exception("Extractor construction");
+			if (!BuildExtractor(Deposits[1]) || Income != BaseIncome + 2 * ExtractorRate) throw new Exception("Extractor construction");
 			int before = Credits;
 			if (BuildExtractor(Deposits[1]) || Credits != before) throw new Exception("Duplicate extractor");
 			var friendly = Entities.First(e => e.Team == 0 && e.Kind == UnitKind.Tank);
@@ -401,8 +427,10 @@ public partial class Battlefield : Node3D
 				throw new Exception("Group attack / repeated click feedback");
 			Shoot(friendly, enemy);
 			if (enemy.Health >= enemy.MaxHealth) throw new Exception("Combat damage");
+			int creditsBeforeKill = Credits;
 			enemy.TakeDamage(999);
 			if (Entities.Contains(enemy)) throw new Exception("Death cleanup");
+			if (Credits != creditsBeforeKill + Cost(UnitKind.Scout) / 10) throw new Exception("Kill bounty");
 			SetSelection(Entities.Where(e => e.Team == 0 && !e.IsBuilding));
 			IssueOrder(new(-10, 0, 25), false);
 			LaunchWave();

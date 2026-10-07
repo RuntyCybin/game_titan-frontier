@@ -29,7 +29,7 @@ El nuevo terreno es editable en `Scenes/Maps/AmberBasin.tscn`; su configuración
 
 En Frontera de Titanio comienzas al suroeste y el enemigo ocupa el noreste; en Cuenca de Ámbar empiezas al oeste y el enemigo al este. En ambos mapas dispones de un centro de mando, un extractor y cuatro vehículos. **Destruye su centro de mando para ganar; perder el tuyo termina la partida.** Ambos centros de mando tienen defensas automáticas.
 
-Recibes 4 de titanio por segundo y 12 adicionales por extractor. Acerca vehículos a los depósitos turquesa y construye extractores para ampliar la economía. La primera oleada llega tras 55 segundos; las siguientes aumentan en tamaño y frecuencia. Puedes atacar directamente la base enemiga.
+Empiezas con 4000 monedas y recibes 20 por segundo, más 60 por cada extractor activo. Cada depósito contiene 100 000 monedas en total: los extractores (de ambos bandos) las van agotando y un depósito vacío deja de producir. Acerca vehículos a los depósitos turquesa y construye extractores para ampliar la economía. La primera oleada llega tras 55 segundos; las siguientes aumentan en tamaño y frecuencia. Destruir un vehículo enemigo te da el 10 % de su coste. Puedes atacar directamente la base enemiga.
 
 | Control | Acción |
 | --- | --- |
@@ -44,7 +44,7 @@ Recibes 4 de titanio por segundo y 12 adicionales por extractor. Acerca vehícul
 | Tab | Seleccionar todos tus vehículos |
 | Ctrl + 1–5 / 1–5 | Guardar / recuperar grupo |
 | Q / E / R | Producir explorador / tanque / artillería |
-| B, después clic en depósito | Construir extractor (250 Ti, requiere fuerzas a 18 m) |
+| B, después clic en depósito | Construir extractor (1000 monedas, requiere fuerzas a 18 m) |
 | Esc / clic derecho | Cancelar orden de ataque o construcción |
 | Esc sin orden pendiente | Pausar / continuar |
 | Clic izquierdo / derecho en minimapa | Mover cámara / ordenar desplazamiento |
@@ -53,9 +53,10 @@ La interfaz también ofrece botones de producción, pausa y reinicio. Límite: 6
 
 | Unidad | Coste | Tiempo | Papel |
 | --- | --- | --- | --- |
-| Explorador | 100 | 4 s | Rápido, explora y permite expandirse |
-| Bastión | 180 | 7 s | Blindado resistente para el frente |
-| Artillería | 260 | 10 s | Largo alcance y daño de área; necesita protección |
+| Explorador | 300 | 4 s | Rápido, explora y permite expandirse |
+| Bastión | 1000 | 7 s | Blindado resistente para el frente |
+| Tanque pequeño | 600 | 5 s | Blindado ligero y barato |
+| Artillería | 2000 | 10 s | Largo alcance y daño de área; necesita protección |
 
 ## Editar visualmente en Godot
 
