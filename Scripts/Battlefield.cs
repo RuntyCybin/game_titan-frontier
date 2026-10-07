@@ -24,6 +24,7 @@ public partial class Battlefield : Node3D
 	public bool Dragging;
 	public bool Paused => GetTree().Paused;
 	private Node3D _cameraRig = null!;
+	private bool _rotating;
 	private float _zoom = 50, _incomeTime;
 	private readonly RandomNumberGenerator _rng = new();
 	private readonly Dictionary<int, List<CombatEntity>> _groups = new();
@@ -101,7 +102,7 @@ public partial class Battlefield : Node3D
 		if (Input.IsPhysicalKeyPressed(Key.S) || Input.IsPhysicalKeyPressed(Key.Down)) pan.Z += 1;
 		if (Input.IsPhysicalKeyPressed(Key.A) || Input.IsPhysicalKeyPressed(Key.Left)) pan.X -= 1;
 		if (Input.IsPhysicalKeyPressed(Key.D) || Input.IsPhysicalKeyPressed(Key.Right)) pan.X += 1;
-		_cameraRig.Position += pan.Normalized() * dt * _zoom * .65f;
+		_cameraRig.Position += _cameraRig.Basis * pan.Normalized() * dt * _zoom * .65f;
 		_cameraRig.Position = new(Mathf.Clamp(_cameraRig.Position.X, -53, 53), 0, Mathf.Clamp(_cameraRig.Position.Z, -53, 53));
 		_incomeTime += dt;
 		if (_incomeTime >= 1)
@@ -248,6 +249,14 @@ public partial class Battlefield : Node3D
 				else Hud.TogglePause();
 				GetViewport().SetInputAsHandled();
 			}
+		}
+		// Hold the middle button and drag horizontally to orbit the camera 360 degrees.
+		if (input is InputEventMouseButton middle && middle.ButtonIndex == MouseButton.Middle)
+			_rotating = middle.Pressed && !Ended && !Paused;
+		if (input is InputEventMouseMotion orbit && _rotating)
+		{
+			if (Ended || Paused) _rotating = false;
+			else _cameraRig.RotateY(-orbit.Relative.X * .006f);
 		}
 		// Release a selection even when the pointer ends over a HUD panel.
 		if (input is InputEventMouseButton release && !release.Pressed && release.ButtonIndex == MouseButton.Left && Dragging)
