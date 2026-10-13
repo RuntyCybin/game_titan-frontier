@@ -29,18 +29,18 @@ public partial class MenuFlow : Node
             GetTree().Root.AddChild(menu);
             GetTree().CurrentScene = menu;
             await Frames();
-            for (int index = 0; index < 2; index++)
+            for (int index = 0; index < 3; index++)
             {
                 menu = (MainMenu)GetTree().CurrentScene;
-                string card = index == 0 ? "Frontier" : "Amber";
+                string card = index == 0 ? "Frontier" : index == 1 ? "Amber" : "Emerald";
                 menu.GetNode<Button>($"Margin/Content/Cards/{card}/Content/Select").EmitSignal(Button.SignalName.Pressed);
                 Check(menu.SelectedMap == index, "Map selection button");
                 menu.GetNode<Button>("Margin/Content/Footer/Play").EmitSignal(Button.SignalName.Pressed);
                 await Frames();
                 var battle = (Battlefield)GetTree().CurrentScene;
-                string title = index == 0 ? "FRONTERA DE TITANIO" : "CUENCA DE ÁMBAR";
-                Check(battle.MapTitle == title && battle.Deposits.Count == (index == 0 ? 5 : 7), "Selected map layout");
-                Check(battle.Entities.Count == 10 && battle.Income == 16 && battle.Credits == 700, "Fresh battle state");
+                string title = index == 0 ? "FRONTERA DE TITANIO" : index == 1 ? "CUENCA DE ÁMBAR" : "VALLE ESMERALDA";
+                Check(battle.MapTitle == title && battle.Deposits.Count == (index == 0 ? 5 : index == 1 ? 7 : 15), "Selected map layout");
+                Check(battle.Entities.Count == 10 && battle.Income == Battlefield.BaseIncome + Battlefield.ExtractorRate && battle.Credits == 4000, "Fresh battle state");
                 battle.Train(UnitKind.Tank);
                 battle.Hud.TogglePause();
                 Check(GetTree().Paused, "Pause before restart");
@@ -49,25 +49,25 @@ public partial class MenuFlow : Node
                 GetTree().ReloadCurrentScene();
                 await Frames();
                 battle = (Battlefield)GetTree().CurrentScene;
-                Check(battle.MapTitle == title && battle.Credits == 700 && battle.Production.Count == 0, "Restart retains map and resets match");
+                Check(battle.MapTitle == title && battle.Credits == 4000 && battle.Production.Count == 0, "Restart retains map and resets match");
                 battle.Hud.TogglePause();
                 battle.Hud.ReturnToMenu();
                 await Frames();
                 menu = (MainMenu)GetTree().CurrentScene;
                 Check(!GetTree().Paused && menu.SelectedMap == index, "Return unpauses and remembers selection");
-                if (index == 1)
+                if (index == 2)
                 {
                     menu.StartMatch();
                     await Frames();
                     battle = (Battlefield)GetTree().CurrentScene;
                     battle.EnemyBase.TakeDamage(99999);
-                    Check(battle.Ended && battle.Won, "Win on second map");
+                    Check(battle.Ended && battle.Won, "Win on third map");
                     battle.Hud.ReturnToMenu();
                     await Frames();
                     Check(GetTree().CurrentScene is MainMenu && !GetTree().Paused, "Return after victory");
                 }
             }
-            GD.Print("MENU FLOW PASS: both selection buttons, launch, layouts, fresh state, restart, paused return, victory return.");
+            GD.Print("MENU FLOW PASS: all three selection buttons, launch, layouts, fresh state, restart, paused return, victory return.");
             GetTree().Quit();
         }
         catch (Exception error)

@@ -10,6 +10,7 @@ public partial class MapPreview : Control
     [Export] public Color TerrainColor { get; set; } = new("243e44");
     private readonly List<Vector3> _deposits = new();
     private Vector3 _player, _enemy;
+    private float _mapSize = 120;
 
     public override void _Ready()
     {
@@ -22,6 +23,7 @@ public partial class MapPreview : Control
             _enemy = scene.GetNode<Node3D>("EnemyHeadquarters").Position;
             foreach (Node3D deposit in scene.GetNode<Node3D>("Map/Deposits").GetChildren())
                 _deposits.Add(deposit.Position);
+            _mapSize = (float)scene.Get("MapSize");
             scene.Free();
         }
         Resized += QueueRedraw;
@@ -30,7 +32,7 @@ public partial class MapPreview : Control
     public override void _Draw()
     {
         DrawRect(new Rect2(Vector2.Zero, Size), TerrainColor);
-        Vector2 Point(Vector3 p) => new((p.X + 60) / 120 * Size.X, (p.Z + 60) / 120 * Size.Y);
+        Vector2 Point(Vector3 p) => new((p.X + _mapSize / 2) / _mapSize * Size.X, (p.Z + _mapSize / 2) / _mapSize * Size.Y);
         for (int i = 1; i < 8; i++)
         {
             var grid = new Color(1, 1, 1, .055f);

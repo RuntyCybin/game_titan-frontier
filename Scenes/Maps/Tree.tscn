@@ -1,0 +1,48 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="bark"]
+albedo_color = Color(0.29, 0.19, 0.11, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="leaf"]
+albedo_color = Color(0.11, 0.30, 0.12, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="leaf_light"]
+albedo_color = Color(0.17, 0.40, 0.15, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="trunk"]
+top_radius = 0.3
+bottom_radius = 0.42
+height = 2.0
+radial_segments = 6
+
+[sub_resource type="CylinderMesh" id="cone_low"]
+top_radius = 0.0
+bottom_radius = 2.3
+height = 3.4
+radial_segments = 7
+
+[sub_resource type="CylinderMesh" id="cone_high"]
+top_radius = 0.0
+bottom_radius = 1.6
+height = 2.8
+radial_segments = 7
+
+[node name="Tree" type="Node3D"]
+
+[node name="Trunk" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("trunk")
+material_override = SubResource("bark")
+
+[node name="CanopyLow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.4, 0)
+mesh = SubResource("cone_low")
+material_override = SubResource("leaf")
+
+[node name="CanopyHigh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.2, 0)
+mesh = SubResource("cone_high")
+material_override = SubResource("leaf_light")
