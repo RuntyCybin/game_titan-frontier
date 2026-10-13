@@ -127,8 +127,10 @@ public partial class Battlefield : Node3D
 			if (ProductionRemaining <= 0)
 			{
 				var kind = Production.Dequeue();
-				var unit = Spawn(kind, 0, PlayerBase.Position + new Vector3(0, 0, -7));
-				unit.Destination = PlayerBase.Position + new Vector3(_rng.RandfRange(-8, 8), 0, -13);
+				// Vehicles roll out through the headquarters door (front face, -Z).
+				var unit = Spawn(kind, 0, PlayerBase.Position + PlayerBase.Basis * new Vector3(0, 0, -2.4f));
+				unit.Destination = PlayerBase.Position + PlayerBase.Basis * new Vector3(_rng.RandfRange(-8, 8), 0, -13);
+				OpenDoor(PlayerBase);
 				unit.Moving = true;
 				ProductionRemaining = Production.Count > 0 ? BuildTime(Production.Peek()) : 0;
 				Status = unit.DisplayName + " listo para recibir órdenes.";
@@ -179,6 +181,20 @@ public partial class Battlefield : Node3D
 		Credits -= Cost(kind);
 		if (Production.Count == 0) ProductionRemaining = BuildTime(kind);
 		Production.Enqueue(kind); Status = "Fabricación iniciada.";
+	}
+
+	private readonly Dictionary<CombatEntity, Tween> _doorTweens = new();
+
+	// Rolls the headquarters door up, holds it while the vehicle leaves, then closes it.
+	private void OpenDoor(CombatEntity headquarters)
+	{
+		if (headquarters.GetNodeOrNull<Node3D>("Body/DoorPivot") is not { } door) return;
+		if (_doorTweens.TryGetValue(headquarters, out var running) && running.IsValid()) running.Kill();
+		var tween = headquarters.CreateTween();
+		tween.TweenProperty(door, "scale:y", .08f, .3);
+		tween.TweenInterval(1.6);
+		tween.TweenProperty(door, "scale:y", 1f, .5);
+		_doorTweens[headquarters] = tween;
 	}
 
 	private void TickConstruction(float dt)
@@ -305,7 +321,7 @@ public partial class Battlefield : Node3D
 		}
 		// Lives independently of the destroyed unit and cleans itself up when finished.
 		AddChild(explosion);
-		Selection.Remove(entity); Entities.Remove(entity);
+		Selection.Remove(entity); Entities.Remove(entity); _doorTweens.Remove(entity);
 		if (entity.Team == 1 && !entity.IsBuilding)
 		{
 			int bounty = Cost(entity.Kind) / 10;
