@@ -14,13 +14,13 @@ El generador `Tools/BuildAbrams.gd` permite reproducir la geometría con `godot 
 
 # Modelo del Leopard
 
-`LeopardBody.tscn` es el modelo del Leopard (inspirado en el Leopard 2A6): casco bajo con glacis, torreta en cuña con cañón largo y freno de boca, siete ruedas por lado con rodillos de retorno, faldones laterales, lanzahumos, cruz blanca en la torreta y camuflaje de tres tonos (verde, negro y marrón) hecho con parches planos. `LeftTrim`, `RightTrim` y `SightLight` reciben el color de cada facción.
+`LeopardBody.tscn` es el modelo del Leopard, inspirado en el Leopard 2A8/Leopard 3: perfil bajo, torreta facetada en cuña (lados inclinados, mejillas en flecha y bustle trasero), cañón largo liso con manga térmica y evacuador, mira del artillero, periscopio del comandante, estación de armas remota, lanzahumos, faldones segmentados y siete ruedas por lado. Usa el mismo color arena que el resto de unidades. `LeftTrim`, `RightTrim` y `SightLight` reciben el color de cada facción.
 
 `Scenes/Units/Leopard.tscn` (antes `MediumTank.tscn`) lo instancia como `Body`. Se fabrica desde el HUD o con la tecla L.
 
 # Modelo del Puma
 
-`PumaBody.tscn` es el modelo del Puma (vehículo de combate de infantería alemán): casco largo con proa inclinada, paneles de blindaje adicionales en los laterales, seis ruedas por lado, torreta pequeña con cañón automático y torre de visión alta, periscopios en el techo, rampa trasera con paneles de advertencia rojos y blancos, retrovisores y baliza. Usa camuflaje desértico (arena, rosa y tostado) con cruz en la torreta. `LeftTrim` y `RightTrim` reciben el color de cada facción.
+`PumaBody.tscn` es el modelo del Puma (vehículo de combate de infantería alemán): casco largo con proa inclinada, paneles de blindaje adicionales en los laterales, seis ruedas por lado, torreta pequeña con cañón automático y torre de visión alta, periscopios en el techo, rampa trasera con paneles de advertencia rojos y blancos, retrovisores y baliza. Usa el mismo color arena liso que el resto de unidades. `LeftTrim` y `RightTrim` reciben el color de cada facción.
 
 # Modelo de la Artillería
 
@@ -28,4 +28,4 @@ El generador `Tools/BuildAbrams.gd` permite reproducir la geometría con `godot 
 
 # Modelo del Truck
 
-`TruckBody.tscn` es el modelo del Truck constructor: camión 8×8 con contenedor. Está inspirado en un camión militar 8×8 de cabina avanzada con contenedor: cabina angular con camuflaje verde y negro, cuatro ejes con neumáticos grandes, retrovisores enormes, escalera, depósitos laterales y contenedor corrugado en la plataforma. `LeftTrim` y `RightTrim` reciben el color de cada facción.
+`TruckBody.tscn` es el modelo del Truck constructor: camión 8×8 con contenedor. Está inspirado en un camión militar 8×8 de cabina avanzada con contenedor: cabina angular en color arena liso como el resto de unidades, cuatro ejes con neumáticos grandes, retrovisores enormes, escalera, depósitos laterales y contenedor corrugado en la plataforma. `LeftTrim` y `RightTrim` reciben el color de cada facción.

@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [sub_resource type="StandardMaterial3D" id="m_green"]
-albedo_color = Color(0.2902, 0.3529, 0.2275, 1)
+albedo_color = Color(0.6784, 0.5961, 0.4392, 1)
 roughness = 0.88
 
 [sub_resource type="StandardMaterial3D" id="m_black"]
@@ -13,11 +13,11 @@ albedo_color = Color(0.1647, 0.1804, 0.1569, 1)
 roughness = 0.88
 
 [sub_resource type="StandardMaterial3D" id="m_container"]
-albedo_color = Color(0.3373, 0.3961, 0.2471, 1)
+albedo_color = Color(0.7216, 0.6431, 0.4784, 1)
 roughness = 0.88
 
 [sub_resource type="StandardMaterial3D" id="m_rib"]
-albedo_color = Color(0.2902, 0.3451, 0.2118, 1)
+albedo_color = Color(0.6275, 0.5529, 0.4078, 1)
 roughness = 0.88
 
 [sub_resource type="StandardMaterial3D" id="m_rubber"]
@@ -33,7 +33,7 @@ albedo_color = Color(0.2784, 0.298, 0.2863, 1)
 roughness = 0.88
 
 [sub_resource type="StandardMaterial3D" id="m_hub"]
-albedo_color = Color(0.2392, 0.2902, 0.1882, 1)
+albedo_color = Color(0.502, 0.4431, 0.3412, 1)
 roughness = 0.88
 
 [sub_resource type="StandardMaterial3D" id="m_white"]
@@ -392,90 +392,6 @@ size = Vector3(0.14, 0.14, 0.14)
 
 [sub_resource type="BoxMesh" id="BoxMesh_95"]
 size = Vector3(0.14, 0.14, 0.14)
-
-[sub_resource type="BoxMesh" id="BoxMesh_96"]
-size = Vector3(0.611450847444851, 0.02, 0.5967147957042918)
-
-[sub_resource type="BoxMesh" id="BoxMesh_97"]
-size = Vector3(0.6699492873699653, 0.02, 0.6689299986661668)
-
-[sub_resource type="BoxMesh" id="BoxMesh_98"]
-size = Vector3(0.7716783584991569, 0.02, 0.5595898212547696)
-
-[sub_resource type="BoxMesh" id="BoxMesh_99"]
-size = Vector3(0.4141741667237573, 0.19931456652396606, 0.02)
-
-[sub_resource type="BoxMesh" id="BoxMesh_100"]
-size = Vector3(0.25458996635611575, 0.1933459600927696, 0.02)
-
-[sub_resource type="BoxMesh" id="BoxMesh_101"]
-size = Vector3(0.5180039080701996, 0.18192084247160764, 0.02)
-
-[sub_resource type="BoxMesh" id="BoxMesh_102"]
-size = Vector3(0.4661083821631408, 0.17533984651005394, 0.02)
-
-[sub_resource type="BoxMesh" id="BoxMesh_103"]
-size = Vector3(0.32330973387329126, 0.19309623384494645, 0.02)
-
-[sub_resource type="BoxMesh" id="BoxMesh_104"]
-size = Vector3(0.02, 0.48844339668502507, 0.3512568087114243)
-
-[sub_resource type="BoxMesh" id="BoxMesh_105"]
-size = Vector3(0.02, 0.4822928003263997, 0.32167283008682745)
-
-[sub_resource type="BoxMesh" id="BoxMesh_106"]
-size = Vector3(0.02, 0.28963666935616034, 0.5628095871517674)
-
-[sub_resource type="BoxMesh" id="BoxMesh_107"]
-size = Vector3(0.02, 0.2195419140127029, 0.30099566833923885)
-
-[sub_resource type="BoxMesh" id="BoxMesh_108"]
-size = Vector3(0.02, 0.4033802748643074, 0.25118409178102485)
-
-[sub_resource type="BoxMesh" id="BoxMesh_109"]
-size = Vector3(0.02, 0.34422355598901166, 0.5364813261264747)
-
-[sub_resource type="BoxMesh" id="BoxMesh_110"]
-size = Vector3(0.02, 0.217100278860737, 0.4966341969493182)
-
-[sub_resource type="BoxMesh" id="BoxMesh_111"]
-size = Vector3(0.02, 0.4534642668164389, 0.5124282578019457)
-
-[sub_resource type="BoxMesh" id="BoxMesh_112"]
-size = Vector3(0.02, 0.37355564871706237, 0.3781645665446512)
-
-[sub_resource type="BoxMesh" id="BoxMesh_113"]
-size = Vector3(0.02, 0.4865539698773499, 0.31332182078286674)
-
-[sub_resource type="BoxMesh" id="BoxMesh_114"]
-size = Vector3(0.02, 0.4826131488283098, 0.5753793618591323)
-
-[sub_resource type="BoxMesh" id="BoxMesh_115"]
-size = Vector3(0.02, 0.4326809044096986, 0.433645637242592)
-
-[sub_resource type="BoxMesh" id="BoxMesh_116"]
-size = Vector3(0.02, 0.457908295756274, 0.5290293371569665)
-
-[sub_resource type="BoxMesh" id="BoxMesh_117"]
-size = Vector3(0.02, 0.30222216065126667, 0.281912952460119)
-
-[sub_resource type="BoxMesh" id="BoxMesh_118"]
-size = Vector3(0.02, 0.4772592858283372, 0.36898583431904564)
-
-[sub_resource type="BoxMesh" id="BoxMesh_119"]
-size = Vector3(0.02, 0.25324333265149657, 0.36087999498218204)
-
-[sub_resource type="BoxMesh" id="BoxMesh_120"]
-size = Vector3(0.02, 0.49901804436101116, 0.4912111055721063)
-
-[sub_resource type="BoxMesh" id="BoxMesh_121"]
-size = Vector3(0.02, 0.3600592224082503, 0.5953446880744935)
-
-[sub_resource type="BoxMesh" id="BoxMesh_122"]
-size = Vector3(0.02, 0.44788865353958796, 0.4578860772426539)
-
-[sub_resource type="BoxMesh" id="BoxMesh_123"]
-size = Vector3(0.02, 0.4748208045325973, 0.2694975308527627)
 
 [node name="Body" type="Node3D"]
 transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
@@ -976,143 +892,3 @@ mesh = SubResource("BoxMesh_94")
 position = Vector3(0.950, 2.970, 3.150)
 material_override = SubResource("m_dark")
 mesh = SubResource("BoxMesh_95")
-
-[node name="CamoRoof0" type="MeshInstance3D" parent="."]
-position = Vector3(0.321, 2.840, -1.639)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_96")
-
-[node name="CamoRoof1" type="MeshInstance3D" parent="."]
-position = Vector3(-0.485, 2.840, -1.972)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_97")
-
-[node name="CamoRoof2" type="MeshInstance3D" parent="."]
-position = Vector3(0.372, 2.840, -2.236)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_98")
-
-[node name="CamoFront0" type="MeshInstance3D" parent="."]
-position = Vector3(0.056, 1.572, -2.780)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_99")
-
-[node name="CamoFront1" type="MeshInstance3D" parent="."]
-position = Vector3(-0.319, 1.678, -2.780)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_100")
-
-[node name="CamoFront2" type="MeshInstance3D" parent="."]
-position = Vector3(0.351, 1.435, -2.780)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_101")
-
-[node name="CamoFront3" type="MeshInstance3D" parent="."]
-position = Vector3(-0.615, 1.671, -2.780)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_102")
-
-[node name="CamoFront4" type="MeshInstance3D" parent="."]
-position = Vector3(0.664, 1.664, -2.780)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_103")
-
-[node name="CamoCabL0" type="MeshInstance3D" parent="."]
-position = Vector3(0.995, 1.808, -1.799)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_104")
-
-[node name="CamoCabL1" type="MeshInstance3D" parent="."]
-position = Vector3(0.995, 1.842, -1.540)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_105")
-
-[node name="CamoCabL2" type="MeshInstance3D" parent="."]
-position = Vector3(0.995, 1.743, -2.163)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_106")
-
-[node name="CamoCabL3" type="MeshInstance3D" parent="."]
-position = Vector3(0.995, 1.705, -1.857)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_107")
-
-[node name="CamoBoxL0" type="MeshInstance3D" parent="."]
-position = Vector3(0.981, 1.938, 0.702)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_108")
-
-[node name="CamoBoxL1" type="MeshInstance3D" parent="."]
-position = Vector3(0.981, 1.906, 1.246)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_109")
-
-[node name="CamoBoxL2" type="MeshInstance3D" parent="."]
-position = Vector3(0.981, 2.662, -0.085)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_110")
-
-[node name="CamoBoxL3" type="MeshInstance3D" parent="."]
-position = Vector3(0.981, 1.644, 2.131)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_111")
-
-[node name="CamoBoxL4" type="MeshInstance3D" parent="."]
-position = Vector3(0.981, 1.596, -0.070)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_112")
-
-[node name="CamoBoxL5" type="MeshInstance3D" parent="."]
-position = Vector3(0.981, 1.823, 2.089)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_113")
-
-[node name="CamoCabR0" type="MeshInstance3D" parent="."]
-position = Vector3(-0.995, 1.766, -2.041)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_114")
-
-[node name="CamoCabR1" type="MeshInstance3D" parent="."]
-position = Vector3(-0.995, 1.695, -1.760)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_115")
-
-[node name="CamoCabR2" type="MeshInstance3D" parent="."]
-position = Vector3(-0.995, 1.688, -1.651)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_116")
-
-[node name="CamoCabR3" type="MeshInstance3D" parent="."]
-position = Vector3(-0.995, 1.844, -1.566)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_117")
-
-[node name="CamoBoxR0" type="MeshInstance3D" parent="."]
-position = Vector3(-0.981, 2.142, 0.732)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_118")
-
-[node name="CamoBoxR1" type="MeshInstance3D" parent="."]
-position = Vector3(-0.981, 1.616, 0.233)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_119")
-
-[node name="CamoBoxR2" type="MeshInstance3D" parent="."]
-position = Vector3(-0.981, 1.795, -0.013)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_120")
-
-[node name="CamoBoxR3" type="MeshInstance3D" parent="."]
-position = Vector3(-0.981, 2.002, 0.563)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_121")
-
-[node name="CamoBoxR4" type="MeshInstance3D" parent="."]
-position = Vector3(-0.981, 2.058, 1.070)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_122")
-
-[node name="CamoBoxR5" type="MeshInstance3D" parent="."]
-position = Vector3(-0.981, 1.668, 1.280)
-material_override = SubResource("m_black")
-mesh = SubResource("BoxMesh_123")
