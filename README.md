@@ -55,7 +55,7 @@ La interfaz también ofrece botones de producción, pausa y reinicio. Límite: 6
 | Unidad | Coste | Tiempo | Papel |
 | --- | --- | --- | --- |
 | Humvee | 300 | 4 s | Vehículo ligero con ametralladora; rápido, explora y permite expandirse |
-| Bastión | 1000 | 7 s | Blindado resistente para el frente |
+| Abrams | 1000 | 7 s | Blindado resistente para el frente |
 | Tanque pequeño | 600 | 5 s | Blindado ligero y barato |
 | Artillería | 2000 | 10 s | Largo alcance y daño de área; necesita protección |
 
@@ -66,7 +66,7 @@ Abre `Scenes/Main.tscn`: el mapa, los depósitos, la cámara y las diez entidade
 | Escena | Contenido editable |
 | --- | --- |
 | `Scenes/Units/Humvee.tscn` | Humvee |
-| `Scenes/Units/Tank.tscn` | Tanque Bastión |
+| `Scenes/Units/Abrams.tscn` | Abrams |
 | `Scenes/Units/Artillery.tscn` | Artillería |
 | `Scenes/Buildings/Headquarters.tscn` | Centro de mando |
 | `Scenes/Buildings/Extractor.tscn` | Extractor |

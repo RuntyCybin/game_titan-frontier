@@ -46,7 +46,7 @@ public partial class BattleHud : Control
         Text(production, "FABRICACIÓN / DESPLIEGUE", 12, Visuals.Cyan);
         var buttons = new HBoxContainer(); production.AddChild(buttons);
         Button(buttons, "[Q] HUMVEE\n300 · 4 s", "Vehículo ligero con ametralladora; rápido y barato.", () => Battle.Train(UnitKind.Humvee));
-        Button(buttons, "[E] BASTIÓN\n1000 · 7 s", "Blindado de primera línea.", () => Battle.Train(UnitKind.Tank));
+        Button(buttons, "[E] ABRAMS\n1000 · 7 s", "Blindado de primera línea.", () => Battle.Train(UnitKind.Abrams));
         Button(buttons, "[T] TANQUE PEQUEÑO\n600 · 5 s", "Blindado ligero y barato.", () => Battle.Train(UnitKind.SmallTank));
         Button(buttons, "[R] ARTILLERÍA\n2000 · 10 s", "Gran alcance y daño de área; frágil.", () => Battle.Train(UnitKind.Artillery));
         Button(buttons, "[B] EXTRACTOR\n1000 · +60/s", "Despliega sobre un depósito a menos de 18 m de tus fuerzas.", () => { if (!Battle.Ended && !Battle.Paused) { Battle.BuildMode = !Battle.BuildMode; Battle.AttackOrder = false; } });

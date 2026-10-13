@@ -29,7 +29,7 @@ outer_radius = 13.045
 rings = 128
 ring_segments = 6
 
-[node name="Tank" type="Node3D" unique_id=857757525]
+[node name="Abrams" type="Node3D" unique_id=857757525]
 script = ExtResource("1_vgw0t")
 Kind = 1
 

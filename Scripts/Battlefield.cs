@@ -63,7 +63,7 @@ public partial class Battlefield : Node3D
 
 	[ExportGroup("Production Scenes")]
 	[Export] public PackedScene HumveeScene { get; set; } = null!;
-	[Export] public PackedScene TankScene { get; set; } = null!;
+	[Export] public PackedScene AbramsScene { get; set; } = null!;
 	[Export] public PackedScene SmallTankScene { get; set; } = null!;
 	[Export] public PackedScene ArtilleryScene { get; set; } = null!;
 	[Export] public PackedScene HeadquartersScene { get; set; } = null!;
@@ -73,7 +73,7 @@ public partial class Battlefield : Node3D
 	{
 		var scene = kind switch
 		{
-			UnitKind.Humvee => HumveeScene, UnitKind.Tank => TankScene,
+			UnitKind.Humvee => HumveeScene, UnitKind.Abrams => AbramsScene,
 			UnitKind.Artillery => ArtilleryScene, UnitKind.SmallTank => SmallTankScene, UnitKind.Headquarters => HeadquartersScene,
 			_ => ExtractorScene
 		};
@@ -158,8 +158,8 @@ public partial class Battlefield : Node3D
 		}
 		return gained;
 	}
-	public static int Cost(UnitKind kind) => kind switch { UnitKind.Humvee => 300, UnitKind.Tank => 1000, UnitKind.SmallTank => 600, UnitKind.Artillery => 2000, _ => ExtractorCost };
-	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Humvee => 4, UnitKind.Tank => 7, UnitKind.SmallTank => 5, _ => 10 };
+	public static int Cost(UnitKind kind) => kind switch { UnitKind.Humvee => 300, UnitKind.Abrams => 1000, UnitKind.SmallTank => 600, UnitKind.Artillery => 2000, _ => ExtractorCost };
+	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Humvee => 4, UnitKind.Abrams => 7, UnitKind.SmallTank => 5, _ => 10 };
 
 	public void Train(UnitKind kind)
 	{
@@ -190,7 +190,7 @@ public partial class Battlefield : Node3D
 		Wave++; NextWave = Mathf.Max(30, 65 - Wave * 3);
 		for (int i = 0; i < Math.Min(3 + Wave, 12); i++)
 		{
-			var unit = Spawn(i % 4 == 3 ? UnitKind.Artillery : i % 3 == 0 ? UnitKind.Humvee : UnitKind.Tank, 1, EnemyBase.Position + new Vector3(-8 + i % 4 * 4, 0, 9 + i / 4 * 4));
+			var unit = Spawn(i % 4 == 3 ? UnitKind.Artillery : i % 3 == 0 ? UnitKind.Humvee : UnitKind.Abrams, 1, EnemyBase.Position + new Vector3(-8 + i % 4 * 4, 0, 9 + i / 4 * 4));
 			unit.Destination = PlayerBase.Position; unit.Moving = true; unit.AttackMove = true;
 		}
 		Status = $"ALERTA · Oleada {Wave} en marcha desde el mando enemigo.";
@@ -320,7 +320,7 @@ public partial class Battlefield : Node3D
 			switch (key.Keycode)
 			{
 				case Key.Q: Train(UnitKind.Humvee); break;
-				case Key.E: Train(UnitKind.Tank); break;
+				case Key.E: Train(UnitKind.Abrams); break;
 				case Key.T: Train(UnitKind.SmallTank); break;
 				case Key.R: Train(UnitKind.Artillery); break;
 				case Key.B: BuildMode = !BuildMode; AttackOrder = false; break;
@@ -395,13 +395,13 @@ public partial class Battlefield : Node3D
 		try
 		{
 			if (Entities.Count != 10 || Income != BaseIncome + ExtractorRate) throw new Exception("Initial economy/entities");
-			var editedTank = TankScene.Instantiate<CombatEntity>();
+			var editedTank = AbramsScene.Instantiate<CombatEntity>();
 			editedTank.MaxHealth = 333;
 			editedTank.Range = 17;
 			editedTank.Team = 1;
 			AddChild(editedTank);
 			var editedRing = (TorusMesh)editedTank.GetNode<MeshInstance3D>("AttackRange").Mesh;
-			var originalTank = Entities.First(e => e.Kind == UnitKind.Tank && e.Team == 0);
+			var originalTank = Entities.First(e => e.Kind == UnitKind.Abrams && e.Team == 0);
 			var originalRing = (TorusMesh)originalTank.GetNode<MeshInstance3D>("AttackRange").Mesh;
 			if (editedTank.Health != 333 || !Mathf.IsEqualApprox(editedRing.OuterRadius, 17.045f)
 				|| !Mathf.IsEqualApprox(originalRing.OuterRadius, originalTank.Range + .045f)
@@ -416,7 +416,7 @@ public partial class Battlefield : Node3D
 			if (!BuildExtractor(Deposits[1]) || Income != BaseIncome + 2 * ExtractorRate) throw new Exception("Extractor construction");
 			int before = Credits;
 			if (BuildExtractor(Deposits[1]) || Credits != before) throw new Exception("Duplicate extractor");
-			var friendly = Entities.First(e => e.Team == 0 && e.Kind == UnitKind.Tank);
+			var friendly = Entities.First(e => e.Team == 0 && e.Kind == UnitKind.Abrams);
 			var enemy = Spawn(UnitKind.Humvee, 1, friendly.Position + new Vector3(3, 0, 0));
 			IssueOrder(enemy.Position, false);
 			if (enemy.HasNode("AttackClick")) throw new Exception("Attack marker without selection");
