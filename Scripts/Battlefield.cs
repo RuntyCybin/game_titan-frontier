@@ -16,11 +16,13 @@ public partial class Battlefield : Node3D
 	public Camera3D Camera = null!;
 	public CombatEntity PlayerBase = null!, EnemyBase = null!;
 	public BattleHud Hud = null!;
-	public const int DepositTotal = 100000, BaseIncome = 20, ExtractorRate = 60, ExtractorCost = 1000;
+	public const int DepositTotal = 100000, BaseIncome = 20, ExtractorRate = 60, ExtractorCost = 1000, HeadquartersCost = 5000;
 	public int Credits = 4000, Wave;
 	public float[] DepositReserve = System.Array.Empty<float>();
 	public float NextWave = 55, ProductionRemaining;
 	public bool Ended, Won, BuildMode, AttackOrder;
+	// Truck currently placing its finished building (BuildMode is the placement cursor).
+	public CombatEntity? PlaceTruck;
 	public string Status = "Selecciona tus vehículos y asegura los depósitos de titanio.";
 	public Vector2 DragStart, DragEnd;
 	public bool Dragging;
@@ -62,9 +64,11 @@ public partial class Battlefield : Node3D
 	[Export] public float MapSize { get; set; } = 120;
 
 	[ExportGroup("Production Scenes")]
-	[Export] public PackedScene ScoutScene { get; set; } = null!;
-	[Export] public PackedScene TankScene { get; set; } = null!;
-	[Export] public PackedScene SmallTankScene { get; set; } = null!;
+	[Export] public PackedScene HumveeScene { get; set; } = null!;
+	[Export] public PackedScene AbramsScene { get; set; } = null!;
+	[Export] public PackedScene PumaScene { get; set; } = null!;
+	[Export] public PackedScene TruckScene { get; set; } = null!;
+	[Export] public PackedScene LeopardScene { get; set; } = null!;
 	[Export] public PackedScene ArtilleryScene { get; set; } = null!;
 	[Export] public PackedScene HeadquartersScene { get; set; } = null!;
 	[Export] public PackedScene ExtractorScene { get; set; } = null!;
@@ -73,8 +77,8 @@ public partial class Battlefield : Node3D
 	{
 		var scene = kind switch
 		{
-			UnitKind.Scout => ScoutScene, UnitKind.Tank => TankScene,
-			UnitKind.Artillery => ArtilleryScene, UnitKind.SmallTank => SmallTankScene, UnitKind.Headquarters => HeadquartersScene,
+			UnitKind.Humvee => HumveeScene, UnitKind.Abrams => AbramsScene,
+			UnitKind.Artillery => ArtilleryScene, UnitKind.Puma => PumaScene, UnitKind.Leopard => LeopardScene, UnitKind.Truck => TruckScene, UnitKind.Headquarters => HeadquartersScene,
 			_ => ExtractorScene
 		};
 		var entity = scene.Instantiate<CombatEntity>();
@@ -92,8 +96,8 @@ public partial class Battlefield : Node3D
 		if (_smokeTest && ++_smokeFrames == 180)
 		{
 			bool moved = Entities.Any(e => e.Team == 0 && !e.IsBuilding && e.Position.X > -20);
-			bool produced = Production.Count == 0 && Entities.Count(e => e.Team == 0 && e.Kind == UnitKind.Scout) == 2;
-			bool earned = Credits > 4000 - Cost(UnitKind.Scout);
+			bool produced = Production.Count == 0 && Entities.Count(e => e.Team == 0 && e.Kind == UnitKind.Humvee) == 2;
+			bool earned = Credits > 4000 - Cost(UnitKind.Humvee);
 			Hud.TogglePause(); bool paused = Paused; Hud.TogglePause();
 			PlayerBase.TakeDamage(99999);
 			bool defeat = Ended && !Won;
@@ -123,8 +127,10 @@ public partial class Battlefield : Node3D
 			if (ProductionRemaining <= 0)
 			{
 				var kind = Production.Dequeue();
-				var unit = Spawn(kind, 0, PlayerBase.Position + new Vector3(0, 0, -7));
-				unit.Destination = PlayerBase.Position + new Vector3(_rng.RandfRange(-8, 8), 0, -13);
+				// Vehicles roll out through the headquarters door (front face, -Z).
+				var unit = Spawn(kind, 0, PlayerBase.Position + PlayerBase.Basis * new Vector3(0, 0, -2.4f));
+				unit.Destination = PlayerBase.Position + PlayerBase.Basis * new Vector3(_rng.RandfRange(-8, 8), 0, -13);
+				OpenDoor(PlayerBase);
 				unit.Moving = true;
 				ProductionRemaining = Production.Count > 0 ? BuildTime(Production.Peek()) : 0;
 				Status = unit.DisplayName + " listo para recibir órdenes.";
@@ -132,11 +138,16 @@ public partial class Battlefield : Node3D
 		}
 		NextWave -= dt;
 		if (NextWave <= 0) LaunchWave();
+		TickConstruction(dt);
+		if (BuildMode && (PlaceTruck == null || !IsInstanceValid(PlaceTruck) || !PlaceTruck.Alive)) { BuildMode = false; PlaceTruck = null; }
 		_buildPreview.Visible = BuildMode;
 		if (BuildMode)
 		{
-			var nearest = Deposits.OrderBy(p => p.DistanceSquaredTo(GroundPoint(GetViewport().GetMousePosition()))).First();
-			_buildPreview.Position = nearest + new Vector3(0, .2f, 0);
+			var ground = GroundPoint(GetViewport().GetMousePosition());
+			bool extractor = PlaceTruck?.BuildKind == UnitKind.Extractor;
+			var spot = extractor ? Deposits.OrderBy(p => p.DistanceSquaredTo(ground)).First() : new Vector3(ground.X, 0, ground.Z);
+			_buildPreview.Scale = extractor ? Vector3.One : Vector3.One * 1.9f;
+			_buildPreview.Position = spot + new Vector3(0, .2f, 0);
 		}
 	}
 
@@ -158,8 +169,8 @@ public partial class Battlefield : Node3D
 		}
 		return gained;
 	}
-	public static int Cost(UnitKind kind) => kind switch { UnitKind.Scout => 300, UnitKind.Tank => 1000, UnitKind.SmallTank => 600, UnitKind.Artillery => 2000, _ => ExtractorCost };
-	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Scout => 4, UnitKind.Tank => 7, UnitKind.SmallTank => 5, _ => 10 };
+	public static int Cost(UnitKind kind) => kind switch { UnitKind.Humvee => 300, UnitKind.Abrams => 1000, UnitKind.Puma => 600, UnitKind.Leopard => 1500, UnitKind.Artillery => 2000, UnitKind.Truck => 800, UnitKind.Headquarters => HeadquartersCost, _ => ExtractorCost };
+	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Humvee => 4, UnitKind.Abrams => 7, UnitKind.Puma => 5, UnitKind.Leopard => 8, UnitKind.Truck => 6, UnitKind.Headquarters => 20, UnitKind.Extractor => 8, _ => 10 };
 
 	public void Train(UnitKind kind)
 	{
@@ -172,17 +183,82 @@ public partial class Battlefield : Node3D
 		Production.Enqueue(kind); Status = "Fabricación iniciada.";
 	}
 
-	public bool BuildExtractor(Vector3 position)
+	private readonly Dictionary<CombatEntity, Tween> _doorTweens = new();
+
+	// Rolls the headquarters door up, holds it while the vehicle leaves, then closes it.
+	private void OpenDoor(CombatEntity headquarters)
 	{
-		if (Ended || Paused) return false;
-		var deposit = Deposits.OrderBy(p => p.DistanceSquaredTo(position)).First();
-		if (deposit.DistanceTo(position) > 5) { Status = "Coloca el extractor sobre un depósito luminoso."; return false; }
-		if (Entities.Any(e => e.Alive && e.IsBuilding && e.Position.DistanceTo(deposit) < 5)) { Status = "Este depósito ya está ocupado."; return false; }
-		if (!Entities.Any(e => e.Alive && e.Team == 0 && e.Position.DistanceTo(deposit) < 18)) { Status = "Acerca una unidad a menos de 18 m del depósito."; return false; }
-		if (DepositReserve[DepositIndex(deposit)] <= 0) { Status = "Este depósito está agotado."; return false; }
-		if (Credits < ExtractorCost) { Status = $"Necesitas {ExtractorCost} monedas."; return false; }
-		Credits -= ExtractorCost; Spawn(UnitKind.Extractor, 0, deposit); BuildMode = false;
-		Status = $"Extractor operativo. +{ExtractorRate} monedas por segundo."; return true;
+		if (headquarters.GetNodeOrNull<Node3D>("Body/DoorPivot") is not { } door) return;
+		if (_doorTweens.TryGetValue(headquarters, out var running) && running.IsValid()) running.Kill();
+		var tween = headquarters.CreateTween();
+		tween.TweenProperty(door, "scale:y", .08f, .3);
+		tween.TweenInterval(1.6);
+		tween.TweenProperty(door, "scale:y", 1f, .5);
+		_doorTweens[headquarters] = tween;
+	}
+
+	private void TickConstruction(float dt)
+	{
+		foreach (var truck in Entities.Where(e => e.Team == 0 && e.Kind == UnitKind.Truck && e.BuildKind != null && !e.BuildReady).ToList())
+		{
+			truck.BuildRemaining -= dt;
+			if (truck.BuildRemaining <= 0)
+			{
+				truck.BuildRemaining = 0; truck.BuildReady = true;
+				Status = $"{BuildingName(truck.BuildKind!.Value)} listo: pulsa READY para colocarlo.";
+			}
+		}
+	}
+
+	public static string BuildingName(UnitKind kind) => kind == UnitKind.Headquarters ? "CENTRO DE MANDO" : "EXTRACTOR";
+
+	// Starts a building on an idle truck: pays up front, then counts down like a unit in production.
+	public bool StartConstruction(CombatEntity truck, UnitKind kind)
+	{
+		if (Ended || Paused || truck.Kind != UnitKind.Truck || !truck.Alive) return false;
+		if (kind != UnitKind.Extractor && kind != UnitKind.Headquarters) return false;
+		if (truck.BuildKind != null) { Status = "Este Truck ya tiene una obra en curso."; return false; }
+		if (Credits < Cost(kind)) { Status = "Monedas insuficientes."; return false; }
+		Credits -= Cost(kind);
+		truck.BuildKind = kind; truck.BuildRemaining = BuildTime(kind); truck.BuildReady = false;
+		Status = $"Construcción de {BuildingName(kind)} iniciada.";
+		return true;
+	}
+
+	// Enters the placement cursor for a finished building (the "Ready" button).
+	public bool BeginPlacement(CombatEntity truck)
+	{
+		if (Ended || Paused || !truck.Alive || truck.BuildKind == null || !truck.BuildReady) return false;
+		PlaceTruck = truck; BuildMode = true; AttackOrder = false;
+		return true;
+	}
+
+	public bool PlaceBuilding(Vector3 position)
+	{
+		if (Ended || Paused || PlaceTruck == null || !IsInstanceValid(PlaceTruck) || !PlaceTruck.Alive || PlaceTruck.BuildKind is not UnitKind kind || !PlaceTruck.BuildReady) return false;
+		Vector3 spot = position;
+		if (kind == UnitKind.Extractor)
+		{
+			spot = Deposits.OrderBy(p => p.DistanceSquaredTo(position)).First();
+			if (spot.DistanceTo(position) > 5) { Status = "Coloca el extractor sobre un depósito luminoso."; return false; }
+			if (Entities.Any(e => e.Alive && e.IsBuilding && e.Position.DistanceTo(spot) < 5)) { Status = "Este depósito ya está ocupado."; return false; }
+			if (DepositReserve[DepositIndex(spot)] <= 0) { Status = "Este depósito está agotado."; return false; }
+			if (PlaceTruck.Position.DistanceTo(spot) > 18) { Status = "Acerca el Truck a menos de 18 m del depósito."; return false; }
+		}
+		else
+		{
+			float limit = MapSize / 2 - 8;
+			spot = new(position.X, 0, position.Z);
+			if (Mathf.Abs(spot.X) > limit || Mathf.Abs(spot.Z) > limit) { Status = "Demasiado cerca del borde del mapa."; return false; }
+			if (PlaceTruck.Position.DistanceTo(spot) > 30) { Status = "Acerca el Truck a menos de 30 m del lugar."; return false; }
+			if (Entities.Any(e => e.Alive && e.IsBuilding && e.Position.DistanceTo(spot) < 11)) { Status = "Hay otro edificio demasiado cerca."; return false; }
+			if (Deposits.Any(d => d.DistanceTo(spot) < 7)) { Status = "No se puede construir sobre un depósito."; return false; }
+		}
+		Spawn(kind, 0, spot);
+		PlaceTruck.BuildKind = null; PlaceTruck.BuildReady = false; PlaceTruck.BuildRemaining = 0;
+		PlaceTruck = null; BuildMode = false;
+		Status = kind == UnitKind.Extractor ? $"Extractor operativo. +{ExtractorRate} monedas por segundo." : "Nuevo centro de mando operativo.";
+		return true;
 	}
 
 	private void LaunchWave()
@@ -190,7 +266,7 @@ public partial class Battlefield : Node3D
 		Wave++; NextWave = Mathf.Max(30, 65 - Wave * 3);
 		for (int i = 0; i < Math.Min(3 + Wave, 12); i++)
 		{
-			var unit = Spawn(i % 4 == 3 ? UnitKind.Artillery : i % 3 == 0 ? UnitKind.Scout : UnitKind.Tank, 1, EnemyBase.Position + new Vector3(-8 + i % 4 * 4, 0, 9 + i / 4 * 4));
+			var unit = Spawn(i % 4 == 3 ? UnitKind.Artillery : i % 3 == 0 ? UnitKind.Humvee : UnitKind.Abrams, 1, EnemyBase.Position + new Vector3(-8 + i % 4 * 4, 0, 9 + i / 4 * 4));
 			unit.Destination = PlayerBase.Position; unit.Moving = true; unit.AttackMove = true;
 		}
 		Status = $"ALERTA · Oleada {Wave} en marcha desde el mando enemigo.";
@@ -245,18 +321,24 @@ public partial class Battlefield : Node3D
 		}
 		// Lives independently of the destroyed unit and cleans itself up when finished.
 		AddChild(explosion);
-		Selection.Remove(entity); Entities.Remove(entity);
+		Selection.Remove(entity); Entities.Remove(entity); _doorTweens.Remove(entity);
 		if (entity.Team == 1 && !entity.IsBuilding)
 		{
 			int bounty = Cost(entity.Kind) / 10;
 			Credits += bounty; Status = $"{entity.DisplayName} enemigo destruido · +{bounty} monedas.";
 		}
-		if (entity.Kind == UnitKind.Headquarters)
+		if (entity.Kind == UnitKind.Headquarters && Entities.FirstOrDefault(e => e.Kind == UnitKind.Headquarters && e.Team == entity.Team && e.Alive) is { } survivor)
+		{
+			if (entity.Team == 0) PlayerBase = survivor; else EnemyBase = survivor;
+			Status = "Centro de mando perdido, pero queda otro en pie.";
+		}
+		else if (entity.Kind == UnitKind.Headquarters)
 		{
 			Ended = true; Won = entity.Team == 1;
 			Status = Won ? "VICTORIA · Mando enemigo destruido" : "DERROTA · Hemos perdido el centro de mando";
 			BuildMode = false; _buildPreview.Visible = false;
 		}
+		if (PlaceTruck == entity) { PlaceTruck = null; BuildMode = false; }
 		entity.QueueFree();
 	}
 
@@ -265,6 +347,20 @@ public partial class Battlefield : Node3D
 		var origin = Camera.ProjectRayOrigin(screen); var direction = Camera.ProjectRayNormal(screen);
 		if (Mathf.Abs(direction.Y) < .001f) return Vector3.Zero;
 		return origin + direction * (-origin.Y / direction.Y);
+	}
+
+	private CombatEntity? HeadquartersAt(Vector2 screen)
+	{
+		var point = GroundPoint(screen);
+		return Entities.FirstOrDefault(e => e.Team == 0 && e.Kind == UnitKind.Headquarters && e.Alive && e.Position.DistanceTo(point) < e.Radius + 1);
+	}
+
+	// The main headquarters is where new vehicles roll out (double right-click on one to choose it).
+	public void SetMainBase(CombatEntity headquarters)
+	{
+		if (headquarters.Team != 0 || headquarters.Kind != UnitKind.Headquarters || !headquarters.Alive) return;
+		PlayerBase = headquarters;
+		Status = "Centro de mando principal cambiado: los vehículos saldrán de aquí.";
 	}
 
 	public void CenterCamera(Vector3 position) => _cameraRig.Position = new(position.X, 0, position.Z);
@@ -305,13 +401,14 @@ public partial class Battlefield : Node3D
 			{ _zoom = Mathf.Clamp(_zoom + (mouse.ButtonIndex == MouseButton.WheelUp ? -4 : 4), 26, 90); Camera.Size = _zoom; }
 			if (mouse.ButtonIndex == MouseButton.Left)
 			{
-				if (BuildMode) BuildExtractor(GroundPoint(mouse.Position));
+				if (BuildMode) PlaceBuilding(GroundPoint(mouse.Position));
 				else if (AttackOrder) { IssueOrder(GroundPoint(mouse.Position), true); AttackOrder = false; }
 				else { DragStart = DragEnd = mouse.Position; Dragging = true; }
 			}
 			if (mouse.ButtonIndex == MouseButton.Right)
 			{
 				if (BuildMode || AttackOrder) { BuildMode = false; AttackOrder = false; }
+				else if (mouse.DoubleClick && HeadquartersAt(mouse.Position) is { } headquarters) SetMainBase(headquarters);
 				else IssueOrder(GroundPoint(mouse.Position), false);
 			}
 		}
@@ -319,11 +416,12 @@ public partial class Battlefield : Node3D
 		{
 			switch (key.Keycode)
 			{
-				case Key.Q: Train(UnitKind.Scout); break;
-				case Key.E: Train(UnitKind.Tank); break;
-				case Key.T: Train(UnitKind.SmallTank); break;
+				case Key.Q: Train(UnitKind.Humvee); break;
+				case Key.E: Train(UnitKind.Abrams); break;
+				case Key.T: Train(UnitKind.Puma); break;
+				case Key.L: Train(UnitKind.Leopard); break;
 				case Key.R: Train(UnitKind.Artillery); break;
-				case Key.B: BuildMode = !BuildMode; AttackOrder = false; break;
+				case Key.V: Train(UnitKind.Truck); break;
 				case Key.F: AttackOrder = true; BuildMode = false; Status = "Haz clic en el destino para avanzar atacando."; break;
 				case Key.X: foreach (var unit in Selection) { unit.Moving = false; unit.Target = null; } break;
 				case Key.Space: CenterCamera(PlayerBase.Position); break;
@@ -395,13 +493,13 @@ public partial class Battlefield : Node3D
 		try
 		{
 			if (Entities.Count != 10 || Income != BaseIncome + ExtractorRate) throw new Exception("Initial economy/entities");
-			var editedTank = TankScene.Instantiate<CombatEntity>();
+			var editedTank = AbramsScene.Instantiate<CombatEntity>();
 			editedTank.MaxHealth = 333;
 			editedTank.Range = 17;
 			editedTank.Team = 1;
 			AddChild(editedTank);
 			var editedRing = (TorusMesh)editedTank.GetNode<MeshInstance3D>("AttackRange").Mesh;
-			var originalTank = Entities.First(e => e.Kind == UnitKind.Tank && e.Team == 0);
+			var originalTank = Entities.First(e => e.Kind == UnitKind.Abrams && e.Team == 0);
 			var originalRing = (TorusMesh)originalTank.GetNode<MeshInstance3D>("AttackRange").Mesh;
 			if (editedTank.Health != 333 || !Mathf.IsEqualApprox(editedRing.OuterRadius, 17.045f)
 				|| !Mathf.IsEqualApprox(originalRing.OuterRadius, originalTank.Range + .045f)
@@ -410,14 +508,27 @@ public partial class Battlefield : Node3D
 			var enemyColor = ((StandardMaterial3D)editedTank.GetNode<MeshInstance3D>("Body/LeftTrim").MaterialOverride).AlbedoColor;
 			if (originalColor != Visuals.Cyan || enemyColor != Visuals.Red) throw new Exception("Independent team materials");
 			editedTank.Free();
-			Train(UnitKind.Scout);
-			if (Credits != 4000 - Cost(UnitKind.Scout) || Production.Count != 1) throw new Exception("Production payment");
+			Train(UnitKind.Humvee);
+			if (Credits != 4000 - Cost(UnitKind.Humvee) || Production.Count != 1) throw new Exception("Production payment");
 			ProductionRemaining = .01f;
-			if (!BuildExtractor(Deposits[1]) || Income != BaseIncome + 2 * ExtractorRate) throw new Exception("Extractor construction");
+			var truck = Spawn(UnitKind.Truck, 0, Deposits[1] + new Vector3(4, 0, 0));
+			int beforeBuild = Credits;
+			if (!StartConstruction(truck, UnitKind.Extractor) || Credits != beforeBuild - ExtractorCost || truck.BuildReady) throw new Exception("Truck construction payment");
+			if (StartConstruction(truck, UnitKind.Headquarters)) throw new Exception("Truck busy");
+			if (BeginPlacement(truck)) throw new Exception("Placement before ready");
+			truck.BuildRemaining = .01f; _incomeTime = 0;
+			TickConstruction(.05f);
+			if (!truck.BuildReady) throw new Exception("Truck countdown");
+			if (!BeginPlacement(truck) || !BuildMode) throw new Exception("Placement mode");
+			if (PlaceBuilding(Deposits[1] + new Vector3(0, 0, 12))) throw new Exception("Extractor off deposit");
+			if (!PlaceBuilding(Deposits[1]) || Income != BaseIncome + 2 * ExtractorRate) throw new Exception("Extractor construction");
 			int before = Credits;
-			if (BuildExtractor(Deposits[1]) || Credits != before) throw new Exception("Duplicate extractor");
-			var friendly = Entities.First(e => e.Team == 0 && e.Kind == UnitKind.Tank);
-			var enemy = Spawn(UnitKind.Scout, 1, friendly.Position + new Vector3(3, 0, 0));
+			truck.BuildKind = UnitKind.Extractor; truck.BuildReady = true;
+			if (BeginPlacement(truck) && PlaceBuilding(Deposits[1]) || Credits != before) throw new Exception("Duplicate extractor");
+			truck.BuildKind = null; truck.BuildReady = false; BuildMode = false; PlaceTruck = null;
+			Entities.Remove(truck); truck.QueueFree();
+			var friendly = Entities.First(e => e.Team == 0 && e.Kind == UnitKind.Abrams);
+			var enemy = Spawn(UnitKind.Humvee, 1, friendly.Position + new Vector3(3, 0, 0));
 			IssueOrder(enemy.Position, false);
 			if (enemy.HasNode("AttackClick")) throw new Exception("Attack marker without selection");
 			SetSelection(new[] { friendly });
@@ -433,7 +544,7 @@ public partial class Battlefield : Node3D
 			int creditsBeforeKill = Credits;
 			enemy.TakeDamage(999);
 			if (Entities.Contains(enemy)) throw new Exception("Death cleanup");
-			if (Credits != creditsBeforeKill + Cost(UnitKind.Scout) / 10) throw new Exception("Kill bounty");
+			if (Credits != creditsBeforeKill + Cost(UnitKind.Humvee) / 10) throw new Exception("Kill bounty");
 			SetSelection(Entities.Where(e => e.Team == 0 && !e.IsBuilding));
 			IssueOrder(new(-10, 0, 25), false);
 			LaunchWave();

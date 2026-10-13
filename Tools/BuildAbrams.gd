@@ -1,5 +1,5 @@
 extends SceneTree
-# Rebuilds only the editable visual scene, not Tank's gameplay or the user's variants.
+# Rebuilds only the editable visual scene, not Abrams's gameplay or the user's variants.
 var body: Node3D
 var sand = material(Color("#ad9870"))
 var light_sand = material(Color("#c1ac82"))
