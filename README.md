@@ -44,7 +44,7 @@ Empiezas con 4000 monedas y recibes 20 por segundo, más 60 por cada extractor a
 | Espacio | Centrar cámara en tu base |
 | Tab | Seleccionar todos tus vehículos |
 | Ctrl + 1–5 / 1–5 | Guardar / recuperar grupo |
-| Q / E / R | Producir explorador / tanque / artillería |
+| Q / E / R | Producir Humvee / tanque / artillería |
 | B, después clic en depósito | Construir extractor (1000 monedas, requiere fuerzas a 18 m) |
 | Esc / clic derecho | Cancelar orden de ataque o construcción |
 | Esc sin orden pendiente | Pausar / continuar |
@@ -54,7 +54,7 @@ La interfaz también ofrece botones de producción, pausa y reinicio. Límite: 6
 
 | Unidad | Coste | Tiempo | Papel |
 | --- | --- | --- | --- |
-| Explorador | 300 | 4 s | Rápido, explora y permite expandirse |
+| Humvee | 300 | 4 s | Vehículo ligero con ametralladora; rápido, explora y permite expandirse |
 | Bastión | 1000 | 7 s | Blindado resistente para el frente |
 | Tanque pequeño | 600 | 5 s | Blindado ligero y barato |
 | Artillería | 2000 | 10 s | Largo alcance y daño de área; necesita protección |
@@ -65,7 +65,7 @@ Abre `Scenes/Main.tscn`: el mapa, los depósitos, la cámara y las diez entidade
 
 | Escena | Contenido editable |
 | --- | --- |
-| `Scenes/Units/Scout.tscn` | Explorador |
+| `Scenes/Units/Humvee.tscn` | Humvee |
 | `Scenes/Units/Tank.tscn` | Tanque Bastión |
 | `Scenes/Units/Artillery.tscn` | Artillería |
 | `Scenes/Buildings/Headquarters.tscn` | Centro de mando |

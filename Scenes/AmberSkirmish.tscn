@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://de56kronfuaum" path="res://Scripts/Battlefield.cs" id="1"]
 [ext_resource type="PackedScene" uid="uid://dodx5443hlp8l" path="res://Scenes/Maps/AmberBasin.tscn" id="2_map"]
-[ext_resource type="PackedScene" path="res://Scenes/Units/Scout.tscn" id="3_scout"]
+[ext_resource type="PackedScene" path="res://Scenes/Units/Humvee.tscn" id="3_humvee"]
 [ext_resource type="PackedScene" uid="uid://je56j87ysqj4" path="res://Scenes/Units/Tank.tscn" id="4_tank"]
 [ext_resource type="PackedScene" path="res://Scenes/Units/Artillery.tscn" id="5_artillery"]
 [ext_resource type="PackedScene" path="res://Scenes/Buildings/Headquarters.tscn" id="6_hq"]
@@ -13,7 +13,7 @@
 script = ExtResource("1")
 MapTitle = "CUENCA DE ÁMBAR"
 ObjectiveText = "Destruye el mando enemigo al este."
-ScoutScene = ExtResource("3_scout")
+HumveeScene = ExtResource("3_humvee")
 TankScene = ExtResource("4_tank")
 SmallTankScene = ExtResource("8_smalltank")
 ArtilleryScene = ExtResource("5_artillery")
@@ -70,7 +70,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 0, 20.913715)
 [node name="PlayerTank2" parent="." unique_id=1966460678 instance=ExtResource("4_tank")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0, 29.004284)
 
-[node name="PlayerScout" parent="." unique_id=557518588 instance=ExtResource("3_scout")]
+[node name="PlayerHumvee" parent="." unique_id=557518588 instance=ExtResource("3_humvee")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39, 0, 23.046158)
 MaxHealth = 80.0
 Speed = 10.0

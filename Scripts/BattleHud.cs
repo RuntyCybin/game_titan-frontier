@@ -45,7 +45,7 @@ public partial class BattleHud : Control
         var production = new VBoxContainer { CustomMinimumSize = new(510, 0) }; columns.AddChild(production);
         Text(production, "FABRICACIÓN / DESPLIEGUE", 12, Visuals.Cyan);
         var buttons = new HBoxContainer(); production.AddChild(buttons);
-        Button(buttons, "[Q] EXPLORADOR\n300 · 4 s", "Rápido, ideal para asegurar depósitos.", () => Battle.Train(UnitKind.Scout));
+        Button(buttons, "[Q] HUMVEE\n300 · 4 s", "Vehículo ligero con ametralladora; rápido y barato.", () => Battle.Train(UnitKind.Humvee));
         Button(buttons, "[E] BASTIÓN\n1000 · 7 s", "Blindado de primera línea.", () => Battle.Train(UnitKind.Tank));
         Button(buttons, "[T] TANQUE PEQUEÑO\n600 · 5 s", "Blindado ligero y barato.", () => Battle.Train(UnitKind.SmallTank));
         Button(buttons, "[R] ARTILLERÍA\n2000 · 10 s", "Gran alcance y daño de área; frágil.", () => Battle.Train(UnitKind.Artillery));

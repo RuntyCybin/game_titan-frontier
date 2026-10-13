@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Scripts/Battlefield.cs" id="1"]
 [ext_resource type="PackedScene" path="res://Scenes/Maps/EmeraldValley.tscn" id="2_map"]
-[ext_resource type="PackedScene" path="res://Scenes/Units/Scout.tscn" id="3_scout"]
+[ext_resource type="PackedScene" path="res://Scenes/Units/Humvee.tscn" id="3_humvee"]
 [ext_resource type="PackedScene" path="res://Scenes/Units/Tank.tscn" id="4_tank"]
 [ext_resource type="PackedScene" path="res://Scenes/Units/Artillery.tscn" id="5_artillery"]
 [ext_resource type="PackedScene" path="res://Scenes/Units/SmallTank.tscn" id="8_smalltank"]
@@ -14,7 +14,7 @@ script = ExtResource("1")
 MapSize = 240.0
 MapTitle = "VALLE ESMERALDA"
 ObjectiveText = "Destruye el mando enemigo al este, al otro lado del bosque."
-ScoutScene = ExtResource("3_scout")
+HumveeScene = ExtResource("3_humvee")
 TankScene = ExtResource("4_tank")
 ArtilleryScene = ExtResource("5_artillery")
 SmallTankScene = ExtResource("8_smalltank")
@@ -54,7 +54,7 @@ position = Vector3(-86, 0, 31)
 [node name="PlayerTank2" parent="." instance=ExtResource("4_tank")]
 position = Vector3(-81, 0, 33)
 
-[node name="PlayerScout" parent="." instance=ExtResource("3_scout")]
+[node name="PlayerHumvee" parent="." instance=ExtResource("3_humvee")]
 position = Vector3(-91, 0, 29)
 
 [node name="PlayerArtillery" parent="." instance=ExtResource("5_artillery")]

@@ -62,7 +62,7 @@ public partial class Battlefield : Node3D
 	[Export] public float MapSize { get; set; } = 120;
 
 	[ExportGroup("Production Scenes")]
-	[Export] public PackedScene ScoutScene { get; set; } = null!;
+	[Export] public PackedScene HumveeScene { get; set; } = null!;
 	[Export] public PackedScene TankScene { get; set; } = null!;
 	[Export] public PackedScene SmallTankScene { get; set; } = null!;
 	[Export] public PackedScene ArtilleryScene { get; set; } = null!;
@@ -73,7 +73,7 @@ public partial class Battlefield : Node3D
 	{
 		var scene = kind switch
 		{
-			UnitKind.Scout => ScoutScene, UnitKind.Tank => TankScene,
+			UnitKind.Humvee => HumveeScene, UnitKind.Tank => TankScene,
 			UnitKind.Artillery => ArtilleryScene, UnitKind.SmallTank => SmallTankScene, UnitKind.Headquarters => HeadquartersScene,
 			_ => ExtractorScene
 		};
@@ -92,8 +92,8 @@ public partial class Battlefield : Node3D
 		if (_smokeTest && ++_smokeFrames == 180)
 		{
 			bool moved = Entities.Any(e => e.Team == 0 && !e.IsBuilding && e.Position.X > -20);
-			bool produced = Production.Count == 0 && Entities.Count(e => e.Team == 0 && e.Kind == UnitKind.Scout) == 2;
-			bool earned = Credits > 4000 - Cost(UnitKind.Scout);
+			bool produced = Production.Count == 0 && Entities.Count(e => e.Team == 0 && e.Kind == UnitKind.Humvee) == 2;
+			bool earned = Credits > 4000 - Cost(UnitKind.Humvee);
 			Hud.TogglePause(); bool paused = Paused; Hud.TogglePause();
 			PlayerBase.TakeDamage(99999);
 			bool defeat = Ended && !Won;
@@ -158,8 +158,8 @@ public partial class Battlefield : Node3D
 		}
 		return gained;
 	}
-	public static int Cost(UnitKind kind) => kind switch { UnitKind.Scout => 300, UnitKind.Tank => 1000, UnitKind.SmallTank => 600, UnitKind.Artillery => 2000, _ => ExtractorCost };
-	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Scout => 4, UnitKind.Tank => 7, UnitKind.SmallTank => 5, _ => 10 };
+	public static int Cost(UnitKind kind) => kind switch { UnitKind.Humvee => 300, UnitKind.Tank => 1000, UnitKind.SmallTank => 600, UnitKind.Artillery => 2000, _ => ExtractorCost };
+	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Humvee => 4, UnitKind.Tank => 7, UnitKind.SmallTank => 5, _ => 10 };
 
 	public void Train(UnitKind kind)
 	{
@@ -190,7 +190,7 @@ public partial class Battlefield : Node3D
 		Wave++; NextWave = Mathf.Max(30, 65 - Wave * 3);
 		for (int i = 0; i < Math.Min(3 + Wave, 12); i++)
 		{
-			var unit = Spawn(i % 4 == 3 ? UnitKind.Artillery : i % 3 == 0 ? UnitKind.Scout : UnitKind.Tank, 1, EnemyBase.Position + new Vector3(-8 + i % 4 * 4, 0, 9 + i / 4 * 4));
+			var unit = Spawn(i % 4 == 3 ? UnitKind.Artillery : i % 3 == 0 ? UnitKind.Humvee : UnitKind.Tank, 1, EnemyBase.Position + new Vector3(-8 + i % 4 * 4, 0, 9 + i / 4 * 4));
 			unit.Destination = PlayerBase.Position; unit.Moving = true; unit.AttackMove = true;
 		}
 		Status = $"ALERTA · Oleada {Wave} en marcha desde el mando enemigo.";
@@ -319,7 +319,7 @@ public partial class Battlefield : Node3D
 		{
 			switch (key.Keycode)
 			{
-				case Key.Q: Train(UnitKind.Scout); break;
+				case Key.Q: Train(UnitKind.Humvee); break;
 				case Key.E: Train(UnitKind.Tank); break;
 				case Key.T: Train(UnitKind.SmallTank); break;
 				case Key.R: Train(UnitKind.Artillery); break;
@@ -410,14 +410,14 @@ public partial class Battlefield : Node3D
 			var enemyColor = ((StandardMaterial3D)editedTank.GetNode<MeshInstance3D>("Body/LeftTrim").MaterialOverride).AlbedoColor;
 			if (originalColor != Visuals.Cyan || enemyColor != Visuals.Red) throw new Exception("Independent team materials");
 			editedTank.Free();
-			Train(UnitKind.Scout);
-			if (Credits != 4000 - Cost(UnitKind.Scout) || Production.Count != 1) throw new Exception("Production payment");
+			Train(UnitKind.Humvee);
+			if (Credits != 4000 - Cost(UnitKind.Humvee) || Production.Count != 1) throw new Exception("Production payment");
 			ProductionRemaining = .01f;
 			if (!BuildExtractor(Deposits[1]) || Income != BaseIncome + 2 * ExtractorRate) throw new Exception("Extractor construction");
 			int before = Credits;
 			if (BuildExtractor(Deposits[1]) || Credits != before) throw new Exception("Duplicate extractor");
 			var friendly = Entities.First(e => e.Team == 0 && e.Kind == UnitKind.Tank);
-			var enemy = Spawn(UnitKind.Scout, 1, friendly.Position + new Vector3(3, 0, 0));
+			var enemy = Spawn(UnitKind.Humvee, 1, friendly.Position + new Vector3(3, 0, 0));
 			IssueOrder(enemy.Position, false);
 			if (enemy.HasNode("AttackClick")) throw new Exception("Attack marker without selection");
 			SetSelection(new[] { friendly });
@@ -433,7 +433,7 @@ public partial class Battlefield : Node3D
 			int creditsBeforeKill = Credits;
 			enemy.TakeDamage(999);
 			if (Entities.Contains(enemy)) throw new Exception("Death cleanup");
-			if (Credits != creditsBeforeKill + Cost(UnitKind.Scout) / 10) throw new Exception("Kill bounty");
+			if (Credits != creditsBeforeKill + Cost(UnitKind.Humvee) / 10) throw new Exception("Kill bounty");
 			SetSelection(Entities.Where(e => e.Team == 0 && !e.IsBuilding));
 			IssueOrder(new(-10, 0, 25), false);
 			LaunchWave();

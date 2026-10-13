@@ -7,3 +7,7 @@ La geometría es propia. Incluye casco y torreta con blindaje inclinado, faldone
 Abre esta escena para editar las piezas. `Scenes/Units/Tank.tscn` instancia el modelo como `Body` y conserva la lógica, estadísticas y anillos del tanque. `SmallTank.tscn` y `MediumTank.tscn` mantienen sus modelos originales.
 
 El generador `Tools/BuildAbrams.gd` permite reproducir la geometría con `godot --headless --path . --script res://Tools/BuildAbrams.gd`. Solo es necesario si quieres regenerarla: sobrescribe `AbramsBody.tscn`, por lo que perdería cambios manuales hechos en ese archivo.
+
+# Modelo del Humvee
+
+`HumveeBody.tscn` es el modelo del Humvee: carrocería color arena con estación de armas remota y ametralladora en el techo, cuatro ruedas, ventanas, retrovisores y antena. `LeftTrim`, `RightTrim` y `WeaponLight` reciben el color de cada facción. Está construido con primitivas y `Scenes/Units/Humvee.tscn` lo instancia como `Body`.
