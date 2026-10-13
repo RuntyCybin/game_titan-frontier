@@ -21,3 +21,7 @@ El generador `Tools/BuildAbrams.gd` permite reproducir la geometría con `godot 
 # Modelo del Puma
 
 `PumaBody.tscn` es el modelo del Puma (vehículo de combate de infantería alemán): casco largo con proa inclinada, paneles de blindaje adicionales en los laterales, seis ruedas por lado, torreta pequeña con cañón automático y torre de visión alta, periscopios en el techo, rampa trasera con paneles de advertencia rojos y blancos, retrovisores y baliza. Usa camuflaje desértico (arena, rosa y tostado) con cruz en la torreta. `LeftTrim` y `RightTrim` reciben el color de cada facción.
+
+# Modelo de la Artillería
+
+`ArtilleryBody.tscn` es el modelo de la Artillería, un obús autopropulsado inspirado en el M109A7 Paladin: casco arena con proa inclinada, torreta grande con cañón largo de freno de boca doble, camilla de transporte delante, cúpula del comandante con ametralladora, caja de equipo y rejillas, siete ruedas por lado y dos antenas. `LeftHullTrim`, `RightHullTrim` y `SightLight` reciben el color de cada facción. `Scenes/Units/Artillery.tscn` lo instancia como `Body`.
