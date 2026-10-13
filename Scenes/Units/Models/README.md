@@ -25,3 +25,7 @@ El generador `Tools/BuildAbrams.gd` permite reproducir la geometría con `godot 
 # Modelo de la Artillería
 
 `ArtilleryBody.tscn` es el modelo de la Artillería, un obús autopropulsado inspirado en el M109A7 Paladin: casco arena con proa inclinada, torreta grande con cañón largo de freno de boca doble, camilla de transporte delante, cúpula del comandante con ametralladora, caja de equipo y rejillas, siete ruedas por lado y dos antenas. `LeftHullTrim`, `RightHullTrim` y `SightLight` reciben el color de cada facción. `Scenes/Units/Artillery.tscn` lo instancia como `Body`.
+
+# Modelo del Truck
+
+`TruckBody.tscn` es el modelo del Truck constructor: camión 8×8 con contenedor. Está inspirado en un camión militar 8×8 de cabina avanzada con contenedor: cabina angular con camuflaje verde y negro, cuatro ejes con neumáticos grandes, retrovisores enormes, escalera, depósitos laterales y contenedor corrugado en la plataforma. `LeftTrim` y `RightTrim` reciben el color de cada facción.

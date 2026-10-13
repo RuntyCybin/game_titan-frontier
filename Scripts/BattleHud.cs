@@ -11,6 +11,11 @@ public partial class BattleHud : Control
     private Label _modalTitle = null!;
     private Button _resume = null!;
     private Control _map = null!;
+    private PanelContainer _build = null!;
+    private Label _buildHint = null!;
+    private readonly UnitKind[] _buildKinds = { UnitKind.Extractor, UnitKind.Headquarters };
+    private readonly Label[] _ready = new Label[2];
+    private readonly Button[] _buildButtons = new Button[2];
     private readonly Color _muted = new("93a7b3");
 
     public override void _Ready()
@@ -50,11 +55,25 @@ public partial class BattleHud : Control
         Button(buttons, "[T] PUMA\n600 · 5 s", "Vehículo de combate de infantería: ágil y económico.", () => Battle.Train(UnitKind.Puma));
         Button(buttons, "[L] LEOPARD\n1500 · 8 s", "Carro de combate pesado con cañón de gran calibre.", () => Battle.Train(UnitKind.Leopard));
         Button(buttons, "[R] ARTILLERÍA\n2000 · 10 s", "Gran alcance y daño de área; frágil.", () => Battle.Train(UnitKind.Artillery));
-        Button(buttons, "[B] EXTRACTOR\n1000 · +60/s", "Despliega sobre un depósito a menos de 18 m de tus fuerzas.", () => { if (!Battle.Ended && !Battle.Paused) { Battle.BuildMode = !Battle.BuildMode; Battle.AttackOrder = false; } });
+        Button(buttons, "[V] TRUCK\n800 · 6 s", "Constructor: selecciónalo para construir Extractores y Centros de mando.", () => Battle.Train(UnitKind.Truck));
         _queue = Text(production, "", 13, _muted);
         _status = Text(production, "", 12, new("ffcc83"));
         _status.AutowrapMode = TextServer.AutowrapMode.WordSmart;
         _status.CustomMinimumSize = new(490, 36);
+
+        _build = Panel(new(1, 1), new(1, 1), new(-398, -346, -18, -202));
+        var buildColumn = new VBoxContainer(); _build.AddChild(buildColumn);
+        _buildHint = Text(buildColumn, "CONSTRUCCIÓN / TRUCK", 12, Visuals.Cyan);
+        var slots = new HBoxContainer(); slots.AddThemeConstantOverride("separation", 12); buildColumn.AddChild(slots);
+        for (int i = 0; i < 2; i++)
+        {
+            int slot = i;
+            var column = new VBoxContainer(); slots.AddChild(column);
+            _ready[i] = Text(column, "READY", 15, new("7dff9a")); _ready[i].HorizontalAlignment = HorizontalAlignment.Center;
+            _buildButtons[i] = Button(column, "", "Pulsa para construir; cuando termine, pulsa READY y colócalo en el mapa.", () => BuildSlot(slot));
+            _buildButtons[i].CustomMinimumSize = new(172, 62);
+        }
+        _build.Visible = false;
 
         _modal = Panel(new(.5f, .5f), new(.5f, .5f), new(-250, -165, 250, 165));
         var modalColumn = new VBoxContainer(); modalColumn.AddThemeConstantOverride("separation", 18); _modal.AddChild(modalColumn);
@@ -64,6 +83,17 @@ public partial class BattleHud : Control
         Button(modalColumn, "REINICIAR ESCARAMUZA", "Nueva partida", () => { GetTree().Paused = false; GetTree().ReloadCurrentScene(); });
         Button(modalColumn, "VOLVER AL MENÚ", "Elegir otro mapa", ReturnToMenu);
         _modal.Visible = false;
+    }
+
+    private CombatEntity? SelectedTruck() => Battle.Selection.FirstOrDefault(e => e.Kind == UnitKind.Truck && e.Alive);
+
+    private void BuildSlot(int slot)
+    {
+        var truck = SelectedTruck();
+        if (truck == null || Battle.Ended || Battle.Paused) return;
+        var kind = _buildKinds[slot];
+        if (truck.BuildKind == null) Battle.StartConstruction(truck, kind);
+        else if (truck.BuildKind == kind && truck.BuildReady) Battle.BeginPlacement(truck);
     }
 
     public void ReturnToMenu()
@@ -99,6 +129,8 @@ public partial class BattleHud : Control
         button.AddThemeStyleboxOverride("normal", Style(new("20333e"), new("395964"), 10));
         button.AddThemeStyleboxOverride("hover", Style(new("2b5059"), Visuals.Cyan, 10));
         button.AddThemeStyleboxOverride("pressed", Style(new("33666a"), Visuals.Cyan, 10));
+        button.AddThemeStyleboxOverride("disabled", Style(new("182229"), new("2a3a42"), 10));
+        button.AddThemeColorOverride("font_disabled_color", new Color("5f737c"));
         button.Pressed += pressed; parent.AddChild(button); return button;
     }
 
@@ -115,7 +147,20 @@ public partial class BattleHud : Control
         _wave.Text = $"OLEADA {Battle.Wave + 1:00}   /   {Mathf.CeilToInt(Battle.NextWave):00}s";
         _selection.Text = Battle.Selection.Count == 1 ? Battle.Selection[0].DisplayName : $"{Battle.Selection.Count:00} UNIDADES SELECCIONADAS";
         _queue.Text = Battle.Production.Count == 0 ? "COLA VACÍA  /  Producción disponible" : $"EN PRODUCCIÓN  /  {Battle.Production.Peek()} · {Battle.ProductionRemaining:0.0}s · {Battle.Production.Count}/8 en cola";
-        _status.Text = Battle.BuildMode ? "DESPLIEGUE: haz clic en un depósito. Esc cancela." : Battle.Status;
+        _status.Text = Battle.BuildMode ? (Battle.PlaceTruck?.BuildKind == UnitKind.Extractor ? "COLOCAR EXTRACTOR: haz clic en un depósito. Esc cancela." : "COLOCAR CENTRO DE MANDO: haz clic en el terreno. Esc cancela.") : Battle.Status;
+        var truck = SelectedTruck();
+        _build.Visible = truck != null && !Battle.Ended;
+        if (truck != null)
+            for (int i = 0; i < 2; i++)
+            {
+                var kind = _buildKinds[i];
+                bool mine = truck.BuildKind == kind, ready = mine && truck.BuildReady;
+                string name = Battlefield.BuildingName(kind);
+                _ready[i].Modulate = new Color(1, 1, 1, ready ? 1 : 0);
+                _buildButtons[i].Disabled = truck.BuildKind != null && !mine;
+                _buildButtons[i].Text = ready ? $"{name}\nCOLOCAR" : mine ? $"{name}\nEN OBRAS · {truck.BuildRemaining:0.0} s"
+                    : $"{name}\n{Battlefield.Cost(kind)} · {Battlefield.BuildTime(kind):0} s";
+            }
         _modal.Visible = Battle.Paused || Battle.Ended;
         _modalTitle.Text = Battle.Ended ? (Battle.Won ? "SECTOR ASEGURADO · VICTORIA" : "DERROTA") : "PAUSA TÁCTICA";
         _resume.Visible = !Battle.Ended;

@@ -30,7 +30,7 @@ El nuevo terreno es editable en `Scenes/Maps/AmberBasin.tscn`; su configuración
 
 En Frontera de Titanio comienzas al suroeste y el enemigo ocupa el noreste; en Cuenca de Ámbar empiezas al oeste y el enemigo al este. En ambos mapas dispones de un centro de mando, un extractor y cuatro vehículos. **Destruye su centro de mando para ganar; perder el tuyo termina la partida.** Ambos centros de mando tienen defensas automáticas.
 
-Empiezas con 4000 monedas y recibes 20 por segundo, más 60 por cada extractor activo. Cada depósito contiene 100 000 monedas en total: los extractores (de ambos bandos) las van agotando y un depósito vacío deja de producir. Acerca vehículos a los depósitos turquesa y construye extractores para ampliar la economía. La primera oleada llega tras 55 segundos; las siguientes aumentan en tamaño y frecuencia. Destruir un vehículo enemigo te da el 10 % de su coste. Puedes atacar directamente la base enemiga.
+Empiezas con 4000 monedas y recibes 20 por segundo, más 60 por cada extractor activo. Cada depósito contiene 100 000 monedas en total: los extractores (de ambos bandos) las van agotando y un depósito vacío deja de producir. Fabrica un Truck, llévalo cerca de los depósitos turquesa y construye extractores para ampliar la economía. La primera oleada llega tras 55 segundos; las siguientes aumentan en tamaño y frecuencia. Destruir un vehículo enemigo te da el 10 % de su coste. Puedes atacar directamente la base enemiga.
 
 | Control | Acción |
 | --- | --- |
@@ -44,8 +44,8 @@ Empiezas con 4000 monedas y recibes 20 por segundo, más 60 por cada extractor a
 | Espacio | Centrar cámara en tu base |
 | Tab | Seleccionar todos tus vehículos |
 | Ctrl + 1–5 / 1–5 | Guardar / recuperar grupo |
-| Q / E / T / L / R | Producir Humvee / Abrams / Puma / Leopard / artillería |
-| B, después clic en depósito | Construir extractor (1000 monedas, requiere fuerzas a 18 m) |
+| Q / E / T / L / V / R | Producir Humvee / Abrams / Puma / Leopard / Truck / artillería |
+| Seleccionar Truck → botón de edificio | Construir extractor o centro de mando (ver «Construcción con el Truck») |
 | Esc / clic derecho | Cancelar orden de ataque o construcción |
 | Esc sin orden pendiente | Pausar / continuar |
 | Clic izquierdo / derecho en minimapa | Mover cámara / ordenar desplazamiento |
@@ -57,6 +57,11 @@ La interfaz también ofrece botones de producción, pausa y reinicio. Límite: 6
 | Humvee | 300 | 4 s | Vehículo ligero con ametralladora; rápido, explora y permite expandirse |
 | Abrams | 1000 | 7 s | Blindado resistente para el frente |
 | Leopard | 1500 | 8 s | Carro de combate pesado con cañón de gran calibre |
+| Truck | 800 | 6 s | Constructor desarmado: levanta extractores y centros de mando |
+
+### Construcción con el Truck
+
+Los edificios solo se construyen con un Truck. Selecciona un Truck (clic sobre él) y aparece el panel **CONSTRUCCIÓN** sobre la barra inferior, con **Extractor** (1000 monedas, 8 s) y **Centro de mando** (5000 monedas, 20 s). Al pulsar un botón se paga y empieza la cuenta atrás; cada Truck construye de uno en uno. Al terminar aparece el cartel **READY** sobre el botón: púlsalo y coloca el edificio en el mapa con un clic (Esc o clic derecho cancelan sin perder la obra). El extractor debe ir sobre un depósito libre con el Truck a menos de 18 m; el centro de mando, en terreno libre a menos de 30 m del Truck, a más de 11 m de otro edificio y fuera de los depósitos. Si el Truck muere durante la obra, se pierde. Perder un centro de mando solo es derrota si no te queda ninguno.
 | Puma | 600 | 5 s | Vehículo de combate de infantería: ágil y económico |
 | Artillería | 2000 | 10 s | Largo alcance y daño de área; necesita protección |
 
@@ -71,6 +76,7 @@ Abre `Scenes/Main.tscn`: el mapa, los depósitos, la cámara y las diez entidade
 | `Scenes/Units/Artillery.tscn` | Artillería |
 | `Scenes/Buildings/Headquarters.tscn` | Centro de mando |
 | `Scenes/Buildings/Extractor.tscn` | Extractor |
+| `Scenes/Units/Truck.tscn` | Truck constructor |
 | `Scenes/Maps/TitaniumFrontier.tscn` | Suelo, carretera, rocas, iluminación y posiciones de depósitos |
 | `Scenes/Maps/EmeraldValley.tscn` | Mapa verde con árboles (`Tree.tscn`) y 15 depósitos; su tamaño se declara con `MapSize` en `Scenes/EmeraldSkirmish.tscn` |
 | `Scenes/Maps/TitaniumDeposit.tscn` | Modelo compartido de los depósitos |

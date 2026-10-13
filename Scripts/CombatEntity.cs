@@ -2,7 +2,7 @@ using Godot;
 
 namespace Cybin;
 
-public enum UnitKind { Humvee, Abrams, Artillery, Headquarters, Extractor, Puma, Leopard }
+public enum UnitKind { Humvee, Abrams, Artillery, Headquarters, Extractor, Puma, Leopard, Truck }
 
 [Tool]
 public partial class CombatEntity : Node3D
@@ -23,9 +23,13 @@ public partial class CombatEntity : Node3D
 	public Vector3 Destination;
 	public CombatEntity? Target;
 	public bool Moving, Selected, AttackMove;
+	// Truck construction: the building being made, its countdown, and whether it is waiting to be placed.
+	public UnitKind? BuildKind;
+	public float BuildRemaining;
+	public bool BuildReady;
 	public bool IsBuilding => Kind == UnitKind.Headquarters || Kind == UnitKind.Extractor;
 	public bool Alive => Health > 0 && !IsQueuedForDeletion();
-	public string DisplayName => Kind switch { UnitKind.Humvee => "HUMVEE", UnitKind.Abrams => "ABRAMS", UnitKind.Artillery => "ARTILLERÍA", UnitKind.Puma => "PUMA", UnitKind.Leopard => "LEOPARD", UnitKind.Headquarters => "CENTRO DE MANDO", _ => "EXTRACTOR" };
+	public string DisplayName => Kind switch { UnitKind.Humvee => "HUMVEE", UnitKind.Abrams => "ABRAMS", UnitKind.Artillery => "ARTILLERÍA", UnitKind.Puma => "PUMA", UnitKind.Leopard => "LEOPARD", UnitKind.Truck => "TRUCK", UnitKind.Headquarters => "CENTRO DE MANDO", _ => "EXTRACTOR" };
 	private MeshInstance3D _ring = null!;
 	private MeshInstance3D? _rangeRing;
 	private Node3D _body = null!;
@@ -100,10 +104,10 @@ public partial class CombatEntity : Node3D
 		if (Engine.IsEditorHint() || Battle == null || !Alive || Battle.Ended) return;
 		float dt = (float)delta;
 		_ring.Visible = Selected;
-		if (_rangeRing != null) _rangeRing.Visible = Selected;
+		if (_rangeRing != null) _rangeRing.Visible = Selected && Damage > 0;
 		_cooldown -= dt;
 		if (Target != null && !Target.Alive) Target = null;
-		if (Target == null && (!Moving || AttackMove || IsBuilding)) Target = Battle.NearestEnemy(this, Range);
+		if (Target == null && Damage > 0 && (!Moving || AttackMove || IsBuilding)) Target = Battle.NearestEnemy(this, Range);
 		if (Target != null)
 		{
 			var difference = Target.Position - Position;
@@ -148,7 +152,8 @@ public partial class CombatEntity : Node3D
 		var movement = direction + separation;
 		if (movement.Length() > 1) movement = movement.Normalized();
 		Position += movement * Speed * dt;
-		Position = new(Mathf.Clamp(Position.X, -57, 57), 0, Mathf.Clamp(Position.Z, -57, 57));
+		float limit = Battle.MapSize / 2 - 3;
+		Position = new(Mathf.Clamp(Position.X, -limit, limit), 0, Mathf.Clamp(Position.Z, -limit, limit));
 		Face(point, dt);
 	}
 

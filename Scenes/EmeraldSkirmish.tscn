@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://Scenes/Units/Abrams.tscn" id="4_abrams"]
 [ext_resource type="PackedScene" path="res://Scenes/Units/Artillery.tscn" id="5_artillery"]
 [ext_resource type="PackedScene" path="res://Scenes/Units/Leopard.tscn" id="9_leopard"]
+[ext_resource type="PackedScene" path="res://Scenes/Units/Truck.tscn" id="10_truck"]
 [ext_resource type="PackedScene" path="res://Scenes/Units/Puma.tscn" id="8_puma"]
 [ext_resource type="PackedScene" path="res://Scenes/Buildings/Headquarters.tscn" id="6_hq"]
 [ext_resource type="PackedScene" path="res://Scenes/Buildings/Extractor.tscn" id="7_extractor"]
@@ -20,6 +21,7 @@ AbramsScene = ExtResource("4_abrams")
 ArtilleryScene = ExtResource("5_artillery")
 PumaScene = ExtResource("8_puma")
 LeopardScene = ExtResource("9_leopard")
+TruckScene = ExtResource("10_truck")
 HeadquartersScene = ExtResource("6_hq")
 ExtractorScene = ExtResource("7_extractor")
 
