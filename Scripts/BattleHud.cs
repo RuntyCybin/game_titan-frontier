@@ -187,6 +187,14 @@ public partial class BattleHud : Control
             DrawRect(new(point - new Vector2(19, 3), new(38, 5)), new("0a151d"));
             DrawRect(new(point - new Vector2(18, 2), new(36 * entity.Health / entity.MaxHealth, 3)), entity.Team == 0 ? Visuals.Cyan : Visuals.Red);
         }
+        if (Battle.Entities.Count(e => e.Team == 0 && e.Kind == UnitKind.Headquarters) > 1 && !Battle.Camera.IsPositionBehind(Battle.PlayerBase.Position))
+        {
+            Vector2 main = Battle.Camera.UnprojectPosition(Battle.PlayerBase.Position + new Vector3(0, 7.5f, 0));
+            var font = GetThemeDefaultFont();
+            var size = font.GetStringSize("★ PRINCIPAL", HorizontalAlignment.Left, -1, 13);
+            DrawRect(new(main - new Vector2(size.X / 2 + 6, size.Y), size + new Vector2(12, 6)), new Color("0a151dcc"));
+            DrawString(font, main - new Vector2(size.X / 2, 4), "★ PRINCIPAL", HorizontalAlignment.Left, -1, 13, Visuals.Cyan);
+        }
         if (Battle.Dragging)
         {
             var rect = new Rect2(Battle.DragStart, Battle.DragEnd - Battle.DragStart).Abs();

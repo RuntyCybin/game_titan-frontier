@@ -349,6 +349,20 @@ public partial class Battlefield : Node3D
 		return origin + direction * (-origin.Y / direction.Y);
 	}
 
+	private CombatEntity? HeadquartersAt(Vector2 screen)
+	{
+		var point = GroundPoint(screen);
+		return Entities.FirstOrDefault(e => e.Team == 0 && e.Kind == UnitKind.Headquarters && e.Alive && e.Position.DistanceTo(point) < e.Radius + 1);
+	}
+
+	// The main headquarters is where new vehicles roll out (double right-click on one to choose it).
+	public void SetMainBase(CombatEntity headquarters)
+	{
+		if (headquarters.Team != 0 || headquarters.Kind != UnitKind.Headquarters || !headquarters.Alive) return;
+		PlayerBase = headquarters;
+		Status = "Centro de mando principal cambiado: los vehículos saldrán de aquí.";
+	}
+
 	public void CenterCamera(Vector3 position) => _cameraRig.Position = new(position.X, 0, position.Z);
 
 	public override void _Input(InputEvent input)
@@ -394,6 +408,7 @@ public partial class Battlefield : Node3D
 			if (mouse.ButtonIndex == MouseButton.Right)
 			{
 				if (BuildMode || AttackOrder) { BuildMode = false; AttackOrder = false; }
+				else if (mouse.DoubleClick && HeadquartersAt(mouse.Position) is { } headquarters) SetMainBase(headquarters);
 				else IssueOrder(GroundPoint(mouse.Position), false);
 			}
 		}

@@ -46,6 +46,7 @@ Empiezas con 4000 monedas y recibes 20 por segundo, más 60 por cada extractor a
 | Ctrl + 1–5 / 1–5 | Guardar / recuperar grupo |
 | Q / E / T / L / V / R | Producir Humvee / Abrams / Puma / Leopard / Truck / artillería |
 | Seleccionar Truck → botón de edificio | Construir extractor o centro de mando (ver «Construcción con el Truck») |
+| Doble clic derecho sobre un centro de mando propio | Convertirlo en principal: los vehículos nuevos salen de él |
 | Esc / clic derecho | Cancelar orden de ataque o construcción |
 | Esc sin orden pendiente | Pausar / continuar |
 | Clic izquierdo / derecho en minimapa | Mover cámara / ordenar desplazamiento |
