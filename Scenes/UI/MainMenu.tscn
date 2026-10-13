@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://Scripts/MapPreview.cs" id="preview"]
 [ext_resource type="PackedScene" path="res://Scenes/Main.tscn" id="frontier"]
 [ext_resource type="PackedScene" path="res://Scenes/AmberSkirmish.tscn" id="amber"]
+[ext_resource type="PackedScene" path="res://Scenes/EmeraldSkirmish.tscn" id="emerald"]
 
 [sub_resource type="StyleBoxFlat" id="panel"]
 bg_color = Color(0.063, 0.114, 0.153, 1)
@@ -81,6 +82,7 @@ theme = SubResource("theme")
 script = ExtResource("menu")
 FrontierScene = ExtResource("frontier")
 AmberScene = ExtResource("amber")
+EmeraldScene = ExtResource("emerald")
 
 [node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -210,6 +212,52 @@ theme_override_font_sizes/font_size = 13
 text = "120 × 120 m     /     7 depósitos     /     Oeste → este"
 
 [node name="Select" type="Button" parent="Margin/Content/Cards/Amber/Content"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+toggle_mode = true
+text = "SELECCIONAR MAPA"
+mouse_default_cursor_shape = 2
+
+[node name="Emerald" type="PanelContainer" parent="Margin/Content/Cards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Content" type="VBoxContainer" parent="Margin/Content/Cards/Emerald"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Tag" type="Label" parent="Margin/Content/Cards/Emerald/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.85, 0.40, 1)
+theme_override_font_sizes/font_size = 12
+text = "03  /  VALLE BOSCOSO"
+
+[node name="Preview" type="Control" parent="Margin/Content/Cards/Emerald/Content"]
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("preview")
+BattleScene = ExtResource("emerald")
+TerrainColor = Color(0.13, 0.27, 0.12, 1)
+
+[node name="Title" type="Label" parent="Margin/Content/Cards/Emerald/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 27
+text = "Valle Esmeralda"
+
+[node name="Description" type="Label" parent="Margin/Content/Cards/Emerald/Content"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.58, 0.68, 0.73, 1)
+text = "Praderas verdes y bosques densos en un mapa enorme.\nMuchas minas: controla el valle antes que el enemigo."
+autowrap_mode = 3
+
+[node name="Facts" type="Label" parent="Margin/Content/Cards/Emerald/Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "240 × 240 m     /     15 depósitos     /     Oeste → este"
+
+[node name="Select" type="Button" parent="Margin/Content/Cards/Emerald/Content"]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 toggle_mode = true

@@ -59,6 +59,8 @@ public partial class Battlefield : Node3D
 		if (_smokeTest) RunSmokeChecks();
 	}
 
+	[Export] public float MapSize { get; set; } = 120;
+
 	[ExportGroup("Production Scenes")]
 	[Export] public PackedScene ScoutScene { get; set; } = null!;
 	[Export] public PackedScene TankScene { get; set; } = null!;
@@ -107,7 +109,8 @@ public partial class Battlefield : Node3D
 		if (Input.IsPhysicalKeyPressed(Key.A) || Input.IsPhysicalKeyPressed(Key.Left)) pan.X -= 1;
 		if (Input.IsPhysicalKeyPressed(Key.D) || Input.IsPhysicalKeyPressed(Key.Right)) pan.X += 1;
 		_cameraRig.Position += _cameraRig.Basis * pan.Normalized() * dt * _zoom * .65f;
-		_cameraRig.Position = new(Mathf.Clamp(_cameraRig.Position.X, -53, 53), 0, Mathf.Clamp(_cameraRig.Position.Z, -53, 53));
+		float limit = MapSize / 2 - 7;
+		_cameraRig.Position = new(Mathf.Clamp(_cameraRig.Position.X, -limit, limit), 0, Mathf.Clamp(_cameraRig.Position.Z, -limit, limit));
 		_incomeTime += dt;
 		if (_incomeTime >= 1)
 		{

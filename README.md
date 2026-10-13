@@ -12,12 +12,13 @@ También puedes compilar con `dotnet build` y ejecutar `godot --path .` si Godot
 
 ## Menú y mapas
 
-El proyecto arranca en **Scenes/UI/MainMenu.tscn**. Hay dos escenarios disponibles:
+El proyecto arranca en **Scenes/UI/MainMenu.tscn**. Hay tres escenarios disponibles:
 
 | Mapa | Distribución | Escena de partida |
 | --- | --- | --- |
 | Frontera de Titanio | Zona industrial; 5 depósitos; bases al suroeste y noreste | `Scenes/Main.tscn` |
 | Cuenca de Ámbar | Llanura desértica; 7 depósitos; bases al oeste y este, con recursos al norte y sur | `Scenes/AmberSkirmish.tscn` |
+| Valle Esmeralda | Pradera verde con bosques; 240 × 240 m (el doble que los otros); 15 depósitos; bases al oeste y este | `Scenes/EmeraldSkirmish.tscn` |
 
 Las vistas tácticas del menú leen las posiciones de bases y depósitos de las escenas reales. Selecciona una tarjeta y pulsa **Iniciar escaramuza**. El menú admite navegación con Tab y activación con Enter/Espacio. **Salir** cierra el juego.
 
@@ -70,6 +71,7 @@ Abre `Scenes/Main.tscn`: el mapa, los depósitos, la cámara y las diez entidade
 | `Scenes/Buildings/Headquarters.tscn` | Centro de mando |
 | `Scenes/Buildings/Extractor.tscn` | Extractor |
 | `Scenes/Maps/TitaniumFrontier.tscn` | Suelo, carretera, rocas, iluminación y posiciones de depósitos |
+| `Scenes/Maps/EmeraldValley.tscn` | Mapa verde con árboles (`Tree.tscn`) y 15 depósitos; su tamaño se declara con `MapSize` en `Scenes/EmeraldSkirmish.tscn` |
 | `Scenes/Maps/TitaniumDeposit.tscn` | Modelo compartido de los depósitos |
 
 Selecciona la raíz de una unidad o edificio para editar **Team**, **Max Health**, **Speed**, **Range**, **Damage**, **Fire Interval** y **Radius** en el Inspector. Las estadísticas se leen de la escena; ya no se sustituyen por valores fijos al iniciar. Activa **Editor Preview → Preview Attack Range** para ver el círculo tenue y ajustar **Range** visualmente. Esta opción solo previsualiza el alcance en el editor: durante la partida aparece al seleccionar el vehículo.
@@ -104,6 +106,6 @@ La misma prueba de partida se puede ejecutar con `res://Scenes/AmberSkirmish.tsc
 
 ## Alcance de esta versión
 
-Son escaramuzas iniciales en dos mapas planos, con gráficos de primitivas editables y combate instantáneo representado por trazas. La IA envía oleadas y defiende su base; no administra una economía propia. El mapa es visible por completo. El movimiento usa separación local, sin búsqueda de rutas alrededor de obstáculos complejos. Los depósitos son inagotables. No incluye todavía niebla de guerra, audio, guardado, multijugador, campaña, mapas planetarios ni el volumen de unidades de los juegos de referencia.
+Son escaramuzas iniciales en tres mapas planos, con gráficos de primitivas editables y combate instantáneo representado por trazas. La IA envía oleadas y defiende su base; no administra una economía propia. El mapa es visible por completo. El movimiento usa separación local, sin búsqueda de rutas alrededor de obstáculos complejos. Los depósitos se agotan (100 000 monedas cada uno). Los árboles son solo decorativos y no bloquean el paso. No incluye todavía niebla de guerra, audio, guardado, multijugador, campaña, mapas planetarios ni el volumen de unidades de los juegos de referencia.
 
 El siguiente paso natural es incorporar navegación y niebla de guerra, y sustituir los modelos provisionales por assets artísticos.

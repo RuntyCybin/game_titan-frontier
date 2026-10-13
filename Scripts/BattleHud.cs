@@ -157,7 +157,7 @@ public partial class BattleHud : Control
             _map.DrawLine(mapRect.Position + new Vector2(mapRect.Size.X * i / 4, 0), mapRect.Position + new Vector2(mapRect.Size.X * i / 4, mapRect.Size.Y), new("25373c"));
             _map.DrawLine(mapRect.Position + new Vector2(0, mapRect.Size.Y * i / 4), mapRect.Position + new Vector2(mapRect.Size.X, mapRect.Size.Y * i / 4), new("25373c"));
         }
-        Vector2 ToMap(Vector3 p) => mapRect.Position + new Vector2((p.X + 60) / 120 * mapRect.Size.X, (p.Z + 60) / 120 * mapRect.Size.Y);
+        Vector2 ToMap(Vector3 p) => mapRect.Position + new Vector2((p.X + Battle.MapSize / 2) / Battle.MapSize * mapRect.Size.X, (p.Z + Battle.MapSize / 2) / Battle.MapSize * mapRect.Size.Y);
         foreach (var deposit in Battle.Deposits) _map.DrawCircle(ToMap(deposit), 3, Battle.DepositReserve[Battle.DepositIndex(deposit)] > 0 ? new("ffcc83") : new("4a4a4a"));
         foreach (var entity in Battle.Entities) _map.DrawCircle(ToMap(entity.Position), entity.IsBuilding ? 4 : 2, entity.Team == 0 ? Visuals.Cyan : Visuals.Red);
         var viewport = GetViewportRect().Size;
@@ -176,7 +176,7 @@ public partial class BattleHud : Control
         if (Battle.Paused || Battle.Ended) return;
         if (input is InputEventMouseButton mouse && mouse.Pressed)
         {
-            var point = mouse.Position / _map.Size * 120 - Vector2.One * 60;
+            var point = mouse.Position / _map.Size * Battle.MapSize - Vector2.One * (Battle.MapSize / 2);
             if (mouse.ButtonIndex == MouseButton.Left) Battle.CenterCamera(new(point.X, 0, point.Y));
             if (mouse.ButtonIndex == MouseButton.Right) Battle.IssueOrder(new(point.X, 0, point.Y), false);
             _map.AcceptEvent();
