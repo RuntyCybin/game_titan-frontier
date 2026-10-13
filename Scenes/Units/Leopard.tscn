@@ -30,7 +30,13 @@ ring_segments = 6
 
 [node name="Leopard" type="Node3D"]
 script = ExtResource("1_k2krw")
-Kind = 1
+Kind = 6
+MaxHealth = 280
+Speed = 5.5
+Range = 14
+Damage = 32
+FireInterval = 1.1
+Radius = 1.3
 
 [node name="Body" parent="." instance=ExtResource("2_body")]
 

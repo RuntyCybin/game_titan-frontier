@@ -64,7 +64,8 @@ public partial class Battlefield : Node3D
 	[ExportGroup("Production Scenes")]
 	[Export] public PackedScene HumveeScene { get; set; } = null!;
 	[Export] public PackedScene AbramsScene { get; set; } = null!;
-	[Export] public PackedScene SmallTankScene { get; set; } = null!;
+	[Export] public PackedScene PumaScene { get; set; } = null!;
+	[Export] public PackedScene LeopardScene { get; set; } = null!;
 	[Export] public PackedScene ArtilleryScene { get; set; } = null!;
 	[Export] public PackedScene HeadquartersScene { get; set; } = null!;
 	[Export] public PackedScene ExtractorScene { get; set; } = null!;
@@ -74,7 +75,7 @@ public partial class Battlefield : Node3D
 		var scene = kind switch
 		{
 			UnitKind.Humvee => HumveeScene, UnitKind.Abrams => AbramsScene,
-			UnitKind.Artillery => ArtilleryScene, UnitKind.SmallTank => SmallTankScene, UnitKind.Headquarters => HeadquartersScene,
+			UnitKind.Artillery => ArtilleryScene, UnitKind.Puma => PumaScene, UnitKind.Leopard => LeopardScene, UnitKind.Headquarters => HeadquartersScene,
 			_ => ExtractorScene
 		};
 		var entity = scene.Instantiate<CombatEntity>();
@@ -158,8 +159,8 @@ public partial class Battlefield : Node3D
 		}
 		return gained;
 	}
-	public static int Cost(UnitKind kind) => kind switch { UnitKind.Humvee => 300, UnitKind.Abrams => 1000, UnitKind.SmallTank => 600, UnitKind.Artillery => 2000, _ => ExtractorCost };
-	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Humvee => 4, UnitKind.Abrams => 7, UnitKind.SmallTank => 5, _ => 10 };
+	public static int Cost(UnitKind kind) => kind switch { UnitKind.Humvee => 300, UnitKind.Abrams => 1000, UnitKind.Puma => 600, UnitKind.Leopard => 1500, UnitKind.Artillery => 2000, _ => ExtractorCost };
+	public static float BuildTime(UnitKind kind) => kind switch { UnitKind.Humvee => 4, UnitKind.Abrams => 7, UnitKind.Puma => 5, UnitKind.Leopard => 8, _ => 10 };
 
 	public void Train(UnitKind kind)
 	{
@@ -321,7 +322,8 @@ public partial class Battlefield : Node3D
 			{
 				case Key.Q: Train(UnitKind.Humvee); break;
 				case Key.E: Train(UnitKind.Abrams); break;
-				case Key.T: Train(UnitKind.SmallTank); break;
+				case Key.T: Train(UnitKind.Puma); break;
+				case Key.L: Train(UnitKind.Leopard); break;
 				case Key.R: Train(UnitKind.Artillery); break;
 				case Key.B: BuildMode = !BuildMode; AttackOrder = false; break;
 				case Key.F: AttackOrder = true; BuildMode = false; Status = "Haz clic en el destino para avanzar atacando."; break;

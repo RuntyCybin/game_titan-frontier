@@ -4,7 +4,7 @@
 
 La geometría es propia. Incluye casco y torreta con blindaje inclinado, faldones laterales, ruedas, cañón con evacuador, escotillas, ópticas, ametralladora, antenas, cesta de estiba y rejillas traseras. El blindaje conserva el color arena; `LeftTrim` y `RightTrim` reciben el color de cada facción.
 
-Abre esta escena para editar las piezas. `Scenes/Units/Abrams.tscn` instancia el modelo como `Body` y conserva la lógica, estadísticas y anillos del tanque. `SmallTank.tscn` mantiene su modelo original.
+Abre esta escena para editar las piezas. `Scenes/Units/Abrams.tscn` instancia el modelo como `Body` y conserva la lógica, estadísticas y anillos del tanque. `Puma.tscn` (antes `SmallTank.tscn`) usa el modelo `PumaBody.tscn`.
 
 El generador `Tools/BuildAbrams.gd` permite reproducir la geometría con `godot --headless --path . --script res://Tools/BuildAbrams.gd`. Solo es necesario si quieres regenerarla: sobrescribe `AbramsBody.tscn`, por lo que perdería cambios manuales hechos en ese archivo.
 
@@ -16,4 +16,8 @@ El generador `Tools/BuildAbrams.gd` permite reproducir la geometría con `godot 
 
 `LeopardBody.tscn` es el modelo del Leopard (inspirado en el Leopard 2A6): casco bajo con glacis, torreta en cuña con cañón largo y freno de boca, siete ruedas por lado con rodillos de retorno, faldones laterales, lanzahumos, cruz blanca en la torreta y camuflaje de tres tonos (verde, negro y marrón) hecho con parches planos. `LeftTrim`, `RightTrim` y `SightLight` reciben el color de cada facción.
 
-`Scenes/Units/Leopard.tscn` (antes `MediumTank.tscn`) lo instancia como `Body`. Todavía no se puede fabricar: no tiene tipo de unidad propio en el juego.
+`Scenes/Units/Leopard.tscn` (antes `MediumTank.tscn`) lo instancia como `Body`. Se fabrica desde el HUD o con la tecla L.
+
+# Modelo del Puma
+
+`PumaBody.tscn` es el modelo del Puma (vehículo de combate de infantería alemán): casco largo con proa inclinada, paneles de blindaje adicionales en los laterales, seis ruedas por lado, torreta pequeña con cañón automático y torre de visión alta, periscopios en el techo, rampa trasera con paneles de advertencia rojos y blancos, retrovisores y baliza. Usa camuflaje desértico (arena, rosa y tostado) con cruz en la torreta. `LeftTrim` y `RightTrim` reciben el color de cada facción.

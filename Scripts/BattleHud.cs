@@ -47,7 +47,8 @@ public partial class BattleHud : Control
         var buttons = new HBoxContainer(); production.AddChild(buttons);
         Button(buttons, "[Q] HUMVEE\n300 · 4 s", "Vehículo ligero con ametralladora; rápido y barato.", () => Battle.Train(UnitKind.Humvee));
         Button(buttons, "[E] ABRAMS\n1000 · 7 s", "Blindado de primera línea.", () => Battle.Train(UnitKind.Abrams));
-        Button(buttons, "[T] TANQUE PEQUEÑO\n600 · 5 s", "Blindado ligero y barato.", () => Battle.Train(UnitKind.SmallTank));
+        Button(buttons, "[T] PUMA\n600 · 5 s", "Vehículo de combate de infantería: ágil y económico.", () => Battle.Train(UnitKind.Puma));
+        Button(buttons, "[L] LEOPARD\n1500 · 8 s", "Carro de combate pesado con cañón de gran calibre.", () => Battle.Train(UnitKind.Leopard));
         Button(buttons, "[R] ARTILLERÍA\n2000 · 10 s", "Gran alcance y daño de área; frágil.", () => Battle.Train(UnitKind.Artillery));
         Button(buttons, "[B] EXTRACTOR\n1000 · +60/s", "Despliega sobre un depósito a menos de 18 m de tus fuerzas.", () => { if (!Battle.Ended && !Battle.Paused) { Battle.BuildMode = !Battle.BuildMode; Battle.AttackOrder = false; } });
         _queue = Text(production, "", 13, _muted);

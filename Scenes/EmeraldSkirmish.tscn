@@ -5,7 +5,8 @@
 [ext_resource type="PackedScene" path="res://Scenes/Units/Humvee.tscn" id="3_humvee"]
 [ext_resource type="PackedScene" path="res://Scenes/Units/Abrams.tscn" id="4_abrams"]
 [ext_resource type="PackedScene" path="res://Scenes/Units/Artillery.tscn" id="5_artillery"]
-[ext_resource type="PackedScene" path="res://Scenes/Units/SmallTank.tscn" id="8_smalltank"]
+[ext_resource type="PackedScene" path="res://Scenes/Units/Leopard.tscn" id="9_leopard"]
+[ext_resource type="PackedScene" path="res://Scenes/Units/Puma.tscn" id="8_puma"]
 [ext_resource type="PackedScene" path="res://Scenes/Buildings/Headquarters.tscn" id="6_hq"]
 [ext_resource type="PackedScene" path="res://Scenes/Buildings/Extractor.tscn" id="7_extractor"]
 
@@ -17,7 +18,8 @@ ObjectiveText = "Destruye el mando enemigo al este, al otro lado del bosque."
 HumveeScene = ExtResource("3_humvee")
 AbramsScene = ExtResource("4_abrams")
 ArtilleryScene = ExtResource("5_artillery")
-SmallTankScene = ExtResource("8_smalltank")
+PumaScene = ExtResource("8_puma")
+LeopardScene = ExtResource("9_leopard")
 HeadquartersScene = ExtResource("6_hq")
 ExtractorScene = ExtResource("7_extractor")
 
