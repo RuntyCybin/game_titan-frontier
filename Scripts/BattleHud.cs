@@ -45,11 +45,11 @@ public partial class BattleHud : Control
         var production = new VBoxContainer { CustomMinimumSize = new(510, 0) }; columns.AddChild(production);
         Text(production, "FABRICACIÓN / DESPLIEGUE", 12, Visuals.Cyan);
         var buttons = new HBoxContainer(); production.AddChild(buttons);
-        Button(buttons, "[Q] EXPLORADOR\n100 Ti · 4 s", "Rápido, ideal para asegurar depósitos.", () => Battle.Train(UnitKind.Scout));
-        Button(buttons, "[E] BASTIÓN\n180 Ti · 7 s", "Blindado de primera línea.", () => Battle.Train(UnitKind.Tank));
-        Button(buttons, "[T] TANQUE PEQUEÑO\n120 Ti · 5 s", "Blindado ligero y barato.", () => Battle.Train(UnitKind.SmallTank));
-        Button(buttons, "[R] ARTILLERÍA\n260 Ti · 10 s", "Gran alcance y daño de área; frágil.", () => Battle.Train(UnitKind.Artillery));
-        Button(buttons, "[B] EXTRACTOR\n250 Ti · +12/s", "Despliega sobre un depósito a menos de 18 m de tus fuerzas.", () => { if (!Battle.Ended && !Battle.Paused) { Battle.BuildMode = !Battle.BuildMode; Battle.AttackOrder = false; } });
+        Button(buttons, "[Q] EXPLORADOR\n300 · 4 s", "Rápido, ideal para asegurar depósitos.", () => Battle.Train(UnitKind.Scout));
+        Button(buttons, "[E] BASTIÓN\n1000 · 7 s", "Blindado de primera línea.", () => Battle.Train(UnitKind.Tank));
+        Button(buttons, "[T] TANQUE PEQUEÑO\n600 · 5 s", "Blindado ligero y barato.", () => Battle.Train(UnitKind.SmallTank));
+        Button(buttons, "[R] ARTILLERÍA\n2000 · 10 s", "Gran alcance y daño de área; frágil.", () => Battle.Train(UnitKind.Artillery));
+        Button(buttons, "[B] EXTRACTOR\n1000 · +60/s", "Despliega sobre un depósito a menos de 18 m de tus fuerzas.", () => { if (!Battle.Ended && !Battle.Paused) { Battle.BuildMode = !Battle.BuildMode; Battle.AttackOrder = false; } });
         _queue = Text(production, "", 13, _muted);
         _status = Text(production, "", 12, new("ffcc83"));
         _status.AutowrapMode = TextServer.AutowrapMode.WordSmart;
@@ -110,7 +110,7 @@ public partial class BattleHud : Control
 
     public override void _Process(double delta)
     {
-        _resources.Text = $"◈ {Battle.Credits:N0} Ti   +{Battle.Income}/s";
+        _resources.Text = $"◈ {Battle.Credits:N0} monedas   +{Battle.Income}/s   ·   Reservas {Battle.TotalReserve:N0}";
         _wave.Text = $"OLEADA {Battle.Wave + 1:00}   /   {Mathf.CeilToInt(Battle.NextWave):00}s";
         _selection.Text = Battle.Selection.Count == 1 ? Battle.Selection[0].DisplayName : $"{Battle.Selection.Count:00} UNIDADES SELECCIONADAS";
         _queue.Text = Battle.Production.Count == 0 ? "COLA VACÍA  /  Producción disponible" : $"EN PRODUCCIÓN  /  {Battle.Production.Peek()} · {Battle.ProductionRemaining:0.0}s · {Battle.Production.Count}/8 en cola";
@@ -157,8 +157,8 @@ public partial class BattleHud : Control
             _map.DrawLine(mapRect.Position + new Vector2(mapRect.Size.X * i / 4, 0), mapRect.Position + new Vector2(mapRect.Size.X * i / 4, mapRect.Size.Y), new("25373c"));
             _map.DrawLine(mapRect.Position + new Vector2(0, mapRect.Size.Y * i / 4), mapRect.Position + new Vector2(mapRect.Size.X, mapRect.Size.Y * i / 4), new("25373c"));
         }
-        Vector2 ToMap(Vector3 p) => mapRect.Position + new Vector2((p.X + 60) / 120 * mapRect.Size.X, (p.Z + 60) / 120 * mapRect.Size.Y);
-        foreach (var deposit in Battle.Deposits) _map.DrawCircle(ToMap(deposit), 3, new("ffcc83"));
+        Vector2 ToMap(Vector3 p) => mapRect.Position + new Vector2((p.X + Battle.MapSize / 2) / Battle.MapSize * mapRect.Size.X, (p.Z + Battle.MapSize / 2) / Battle.MapSize * mapRect.Size.Y);
+        foreach (var deposit in Battle.Deposits) _map.DrawCircle(ToMap(deposit), 3, Battle.DepositReserve[Battle.DepositIndex(deposit)] > 0 ? new("ffcc83") : new("4a4a4a"));
         foreach (var entity in Battle.Entities) _map.DrawCircle(ToMap(entity.Position), entity.IsBuilding ? 4 : 2, entity.Team == 0 ? Visuals.Cyan : Visuals.Red);
         var viewport = GetViewportRect().Size;
         var corners = new[] { new Vector2(0, 86), new Vector2(viewport.X, 86), new Vector2(viewport.X, viewport.Y - 192), new Vector2(0, viewport.Y - 192) };
@@ -176,7 +176,7 @@ public partial class BattleHud : Control
         if (Battle.Paused || Battle.Ended) return;
         if (input is InputEventMouseButton mouse && mouse.Pressed)
         {
-            var point = mouse.Position / _map.Size * 120 - Vector2.One * 60;
+            var point = mouse.Position / _map.Size * Battle.MapSize - Vector2.One * (Battle.MapSize / 2);
             if (mouse.ButtonIndex == MouseButton.Left) Battle.CenterCamera(new(point.X, 0, point.Y));
             if (mouse.ButtonIndex == MouseButton.Right) Battle.IssueOrder(new(point.X, 0, point.Y), false);
             _map.AcceptEvent();
