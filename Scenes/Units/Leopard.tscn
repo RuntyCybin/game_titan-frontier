@@ -1,8 +1,7 @@
-[gd_scene format=3 uid="uid://je56j87ysqj4"]
+[gd_scene format=3 uid="uid://d4ahpq6a6jmll"]
 
-[ext_resource type="Script" uid="uid://btl5xcnhqysar" path="res://Scripts/CombatEntity.cs" id="1_vgw0t"]
-
-[ext_resource type="PackedScene" path="res://Scenes/Units/Models/AbramsBody.tscn" id="2_abrams"]
+[ext_resource type="Script" uid="uid://btl5xcnhqysar" path="res://Scripts/CombatEntity.cs" id="1_k2krw"]
+[ext_resource type="PackedScene" path="res://Scenes/Units/Models/LeopardBody.tscn" id="2_body"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ic60w"]
 albedo_color = Color(0.28235295, 0.89411765, 0.8352941, 1)
@@ -29,19 +28,25 @@ outer_radius = 13.045
 rings = 128
 ring_segments = 6
 
-[node name="Tank" type="Node3D" unique_id=857757525]
-script = ExtResource("1_vgw0t")
-Kind = 1
+[node name="Leopard" type="Node3D"]
+script = ExtResource("1_k2krw")
+Kind = 6
+MaxHealth = 280
+Speed = 5.5
+Range = 14
+Damage = 32
+FireInterval = 1.1
+Radius = 1.3
 
-[node name="Body" parent="." instance=ExtResource("2_abrams")]
+[node name="Body" parent="." instance=ExtResource("2_body")]
 
-[node name="SelectionRing" type="MeshInstance3D" parent="." unique_id=1912013104]
+[node name="SelectionRing" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_ic60w")
 mesh = SubResource("TorusMesh_4531x")
 
-[node name="AttackRange" type="MeshInstance3D" parent="." unique_id=1913877027]
+[node name="AttackRange" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.08, 0, 0, 0, 1, 0, 0.1, 0)
 visible = false
 material_override = SubResource("StandardMaterial3D_u4s3f")

@@ -41,7 +41,7 @@ public partial class MenuFlow : Node
                 string title = index == 0 ? "FRONTERA DE TITANIO" : index == 1 ? "CUENCA DE ÁMBAR" : "VALLE ESMERALDA";
                 Check(battle.MapTitle == title && battle.Deposits.Count == (index == 0 ? 5 : index == 1 ? 7 : 15), "Selected map layout");
                 Check(battle.Entities.Count == 10 && battle.Income == Battlefield.BaseIncome + Battlefield.ExtractorRate && battle.Credits == 4000, "Fresh battle state");
-                battle.Train(UnitKind.Tank);
+                battle.Train(UnitKind.Abrams);
                 battle.Hud.TogglePause();
                 Check(GetTree().Paused, "Pause before restart");
                 // Same operation used by the restart button: unpause and reload the selected scene.

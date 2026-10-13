@@ -87,6 +87,25 @@ outer_radius = 4.705
 rings = 32
 ring_segments = 8
 
+[sub_resource type="BoxMesh" id="BoxMesh_door_opening"]
+size = Vector3(2.6, 1.95, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_door_panel"]
+size = Vector3(2.5, 1.9, 0.08)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_door_panel"]
+albedo_color = Color(0.36, 0.42, 0.45, 1)
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_door_slat"]
+size = Vector3(2.5, 0.05, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_door_post"]
+size = Vector3(0.18, 2.1, 0.16)
+
+[sub_resource type="BoxMesh" id="BoxMesh_door_lintel"]
+size = Vector3(3.0, 0.18, 0.16)
+
 [node name="Headquarters" type="Node3D" unique_id=1692472740]
 script = ExtResource("1_k77r4")
 Kind = 3
@@ -139,6 +158,57 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.05, 1.7, 0)
 material_override = SubResource("StandardMaterial3D_f8277")
 mesh = SubResource("BoxMesh_brpca")
 metadata/team_role = "accent"
+
+[node name="DoorOpening" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.375, -2.52)
+material_override = SubResource("StandardMaterial3D_6h3l3")
+mesh = SubResource("BoxMesh_door_opening")
+
+[node name="DoorLeftPost" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 1.45, -2.56)
+material_override = SubResource("StandardMaterial3D_s2cav")
+mesh = SubResource("BoxMesh_door_post")
+metadata/team_role = "accent"
+
+[node name="DoorRightPost" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 1.45, -2.56)
+material_override = SubResource("StandardMaterial3D_s2cav")
+mesh = SubResource("BoxMesh_door_post")
+metadata/team_role = "accent"
+
+[node name="DoorLintel" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.45, -2.56)
+material_override = SubResource("StandardMaterial3D_s2cav")
+mesh = SubResource("BoxMesh_door_lintel")
+metadata/team_role = "accent"
+
+[node name="DoorPivot" type="Node3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, -2.58)
+
+[node name="DoorPanel" type="MeshInstance3D" parent="Body/DoorPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.95, 0)
+material_override = SubResource("StandardMaterial3D_door_panel")
+mesh = SubResource("BoxMesh_door_panel")
+
+[node name="DoorSlat0" type="MeshInstance3D" parent="Body/DoorPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.38, -0.02)
+material_override = SubResource("StandardMaterial3D_6h3l3")
+mesh = SubResource("BoxMesh_door_slat")
+
+[node name="DoorSlat1" type="MeshInstance3D" parent="Body/DoorPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.76, -0.02)
+material_override = SubResource("StandardMaterial3D_6h3l3")
+mesh = SubResource("BoxMesh_door_slat")
+
+[node name="DoorSlat2" type="MeshInstance3D" parent="Body/DoorPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.14, -0.02)
+material_override = SubResource("StandardMaterial3D_6h3l3")
+mesh = SubResource("BoxMesh_door_slat")
+
+[node name="DoorSlat3" type="MeshInstance3D" parent="Body/DoorPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.52, -0.02)
+material_override = SubResource("StandardMaterial3D_6h3l3")
+mesh = SubResource("BoxMesh_door_slat")
 
 [node name="SelectionRing" type="MeshInstance3D" parent="." unique_id=988874462]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
