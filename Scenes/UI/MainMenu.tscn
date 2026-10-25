@@ -163,7 +163,7 @@ autowrap_mode = 3
 [node name="Facts" type="Label" parent="Margin/Content/Cards/Frontier/Content"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "120 × 120 m     /     5 depósitos     /     Suroeste ↗ noreste"
+text = "240 × 240 m     /     5 depósitos     /     Suroeste ↗ noreste"
 
 [node name="Select" type="Button" parent="Margin/Content/Cards/Frontier/Content"]
 custom_minimum_size = Vector2(0, 48)
@@ -209,7 +209,7 @@ autowrap_mode = 3
 [node name="Facts" type="Label" parent="Margin/Content/Cards/Amber/Content"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "120 × 120 m     /     7 depósitos     /     Oeste → este"
+text = "240 × 240 m     /     7 depósitos     /     Oeste → este"
 
 [node name="Select" type="Button" parent="Margin/Content/Cards/Amber/Content"]
 custom_minimum_size = Vector2(0, 48)
@@ -255,7 +255,7 @@ autowrap_mode = 3
 [node name="Facts" type="Label" parent="Margin/Content/Cards/Emerald/Content"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 13
-text = "240 × 240 m     /     15 depósitos     /     Oeste → este"
+text = "480 × 480 m     /     15 depósitos     /     Oeste → este"
 
 [node name="Select" type="Button" parent="Margin/Content/Cards/Emerald/Content"]
 custom_minimum_size = Vector2(0, 48)

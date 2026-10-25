@@ -95,7 +95,7 @@ public partial class Battlefield : Node3D
 		}
 		if (_smokeTest && ++_smokeFrames == 180)
 		{
-			bool moved = Entities.Any(e => e.Team == 0 && !e.IsBuilding && e.Position.X > -20);
+			bool moved = Entities.Any(e => e.Team == 0 && !e.IsBuilding && e.Position.X > PlayerBase.Position.X + 14);
 			bool produced = Production.Count == 0 && Entities.Count(e => e.Team == 0 && e.Kind == UnitKind.Humvee) == 2;
 			bool earned = Credits > 4000 - Cost(UnitKind.Humvee);
 			Hud.TogglePause(); bool paused = Paused; Hud.TogglePause();
@@ -558,7 +558,7 @@ public partial class Battlefield : Node3D
 			if (Entities.Contains(enemy)) throw new Exception("Death cleanup");
 			if (Credits != creditsBeforeKill + Cost(UnitKind.Humvee) / 10) throw new Exception("Kill bounty");
 			SetSelection(Entities.Where(e => e.Team == 0 && !e.IsBuilding));
-			IssueOrder(new(-10, 0, 25), false);
+			IssueOrder(PlayerBase.Position + new Vector3(24, 0, -8), false);
 			LaunchWave();
 			if (Wave != 1) throw new Exception("Enemy waves");
 			EnemyBase.TakeDamage(99999);
