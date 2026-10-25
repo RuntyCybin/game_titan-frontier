@@ -464,16 +464,26 @@ public partial class Battlefield : Node3D
 		if (units.Length == 0) return;
 		var target = Entities.Where(e => e.Alive && e.Team == 1 && e.Position.DistanceTo(position) < e.Radius + 1)
 			.OrderBy(e => e.Position.DistanceSquaredTo(position)).FirstOrDefault();
-		int columns = Mathf.CeilToInt(Mathf.Sqrt(units.Length));
-		// Formation slots wide enough for the largest vehicle, so units do not fight over the same spot.
-		float spacing = Mathf.Max(3.2f, units.Max(e => e.Radius) * 2 + .6f), limit = MapSize / 2 - 3;
+		// Single-file column: the vehicle nearest the destination leads, each other one follows the one
+		// ahead of it, and they stop in a line ending at the clicked point.
+		var centre = units.Aggregate(Vector3.Zero, (sum, e) => sum + e.Position) / units.Length;
+		var heading = new Vector3(position.X - centre.X, 0, position.Z - centre.Z);
+		heading = heading.LengthSquared() > .01f ? heading.Normalized() : Vector3.Forward;
+		units = units.OrderBy(e => e.Position.DistanceSquaredTo(position)).ToArray();
+		float limit = MapSize / 2 - 3, back = 0;
 		for (int i = 0; i < units.Length; i++)
 		{
-			units[i].Target = target;
-			units[i].Destination = new(Mathf.Clamp(position.X + (i % columns - (columns - 1) / 2f) * spacing, -limit, limit), 0, Mathf.Clamp(position.Z + (i / columns) * spacing, -limit, limit));
-			units[i].Moving = true; units[i].AttackMove = attackMove;
+			var unit = units[i];
+			if (i > 0) back += units[i - 1].Radius + unit.Radius + .8f;
+			var slot = position - heading * back;
+			unit.Target = target;
+			unit.Destination = new(Mathf.Clamp(slot.X, -limit, limit), 0, Mathf.Clamp(slot.Z, -limit, limit));
+			unit.Follow = i > 0 && target == null ? units[i - 1] : null;
+			unit.FollowGap = i > 0 ? units[i - 1].Radius + unit.Radius + .8f : 0;
+			unit.Heading = heading;
+			unit.Moving = true; unit.AttackMove = attackMove;
 		}
-		if (units.Length > 0) Status = target != null ? "Objetivo fijado." : attackMove ? "Avanzando con ataque automático." : "Desplazamiento en formación.";
+		if (units.Length > 0) Status = target != null ? "Objetivo fijado." : attackMove ? "Avanzando con ataque automático." : "Desplazamiento en columna.";
 		if (target != null)
 		{
 			var click = target.GetNodeOrNull<AttackClick>("AttackClick");

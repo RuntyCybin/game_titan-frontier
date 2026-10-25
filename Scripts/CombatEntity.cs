@@ -23,6 +23,10 @@ public partial class CombatEntity : Node3D
 	public Vector3 Destination;
 	public CombatEntity? Target;
 	public bool Moving, Selected, AttackMove;
+	// Column movement: the vehicle ahead in the queue, how far behind it to drive, and current travel direction.
+	public CombatEntity? Follow;
+	public float FollowGap;
+	public Vector3 Heading = Vector3.Forward;
 	// Truck construction: the building being made, its countdown, and whether it is waiting to be placed.
 	public UnitKind? BuildKind;
 	public float BuildRemaining;
@@ -126,7 +130,13 @@ public partial class CombatEntity : Node3D
 		}
 		else if (Moving)
 		{
-			if (Position.DistanceTo(Destination) < .5f) Moving = false;
+			if (Position.DistanceTo(Destination) < .5f) { Moving = false; Follow = null; }
+			else if (Follow != null && IsInstanceValid(Follow) && Follow.Alive && Follow.Moving)
+			{
+				// Drive in the leader's tracks, holding the gap; wait if already close behind it.
+				var slot = Follow.Position - Follow.Heading * FollowGap;
+				if (Position.DistanceTo(slot) > .6f && Position.DistanceTo(Follow.Position) > FollowGap * .9f) MoveTowards(slot, dt);
+			}
 			else MoveTowards(Destination, dt);
 		}
 	}
@@ -150,6 +160,7 @@ public partial class CombatEntity : Node3D
 			float gap = Radius + other.Radius + .25f;
 			if (distance < gap && distance > .01f) separation += away / distance * (gap - distance) * 2;
 		}
+		if (direction.LengthSquared() > .0001f) Heading = direction;
 		var movement = direction + separation;
 		if (movement.Length() > 1) movement = movement.Normalized();
 		Position += movement * Speed * dt;
