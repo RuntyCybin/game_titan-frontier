@@ -16,7 +16,7 @@ El proyecto arranca en **Scenes/UI/MainMenu.tscn**. Hay tres escenarios disponib
 
 | Mapa | Distribución | Escena de partida |
 | --- | --- | --- |
-| Frontera de Titanio | Zona industrial; 240 × 240 m; 5 depósitos; bases al suroeste y noreste | `Scenes/Main.tscn` |
+| Frontera de Titanio | Zona industrial con carreteras, caminos de tierra, bosques y rocas; 240 × 240 m; 5 depósitos; bases al suroeste y noreste | `Scenes/Main.tscn` |
 | Cuenca de Ámbar | Llanura desértica; 240 × 240 m; 7 depósitos; bases al oeste y este, con recursos al norte y sur | `Scenes/AmberSkirmish.tscn` |
 | Valle Esmeralda | Pradera verde con bosques; 480 × 480 m (el doble que los otros); 15 depósitos; bases al oeste y este | `Scenes/EmeraldSkirmish.tscn` |
 
