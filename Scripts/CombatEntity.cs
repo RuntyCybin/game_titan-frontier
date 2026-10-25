@@ -23,6 +23,10 @@ public partial class CombatEntity : Node3D
 	public Vector3 Destination;
 	public CombatEntity? Target;
 	public bool Moving, Selected, AttackMove;
+	// Column movement: the vehicle ahead in the queue, how far behind it to drive, and current travel direction.
+	public CombatEntity? Follow;
+	public float FollowGap;
+	public Vector3 Heading = Vector3.Forward;
 	// Truck construction: the building being made, its countdown, and whether it is waiting to be placed.
 	public UnitKind? BuildKind;
 	public float BuildRemaining;
@@ -106,6 +110,7 @@ public partial class CombatEntity : Node3D
 		_ring.Visible = Selected;
 		if (_rangeRing != null) _rangeRing.Visible = Selected && Damage > 0;
 		_cooldown -= dt;
+		if (!IsBuilding) ResolveOverlaps(dt);
 		if (Target != null && !Target.Alive) Target = null;
 		if (Target == null && Damage > 0 && (!Moving || AttackMove || IsBuilding)) Target = Battle.NearestEnemy(this, Range);
 		if (Target != null)
@@ -125,7 +130,13 @@ public partial class CombatEntity : Node3D
 		}
 		else if (Moving)
 		{
-			if (Position.DistanceTo(Destination) < .5f) Moving = false;
+			if (Position.DistanceTo(Destination) < .5f) { Moving = false; Follow = null; }
+			else if (Follow != null && IsInstanceValid(Follow) && Follow.Alive && Follow.Moving)
+			{
+				// Drive in the leader's tracks, holding the gap; wait if already close behind it.
+				var slot = Follow.Position - Follow.Heading * FollowGap;
+				if (Position.DistanceTo(slot) > .6f && Position.DistanceTo(Follow.Position) > FollowGap * .9f) MoveTowards(slot, dt);
+			}
 			else MoveTowards(Destination, dt);
 		}
 	}
@@ -149,12 +160,33 @@ public partial class CombatEntity : Node3D
 			float gap = Radius + other.Radius + .25f;
 			if (distance < gap && distance > .01f) separation += away / distance * (gap - distance) * 2;
 		}
+		if (direction.LengthSquared() > .0001f) Heading = direction;
 		var movement = direction + separation;
 		if (movement.Length() > 1) movement = movement.Normalized();
 		Position += movement * Speed * dt;
 		float limit = Battle.MapSize / 2 - 3;
 		Position = new(Mathf.Clamp(Position.X, -limit, limit), 0, Mathf.Clamp(Position.Z, -limit, limit));
 		Face(point, dt);
+	}
+
+	// Hard collision: after steering, push apart any vehicles whose footprints still overlap.
+	// Each unit corrects its own half against another unit; buildings never move, so the unit takes
+	// the whole push, eased so a vehicle leaving the headquarters door slides out instead of jumping.
+	private void ResolveOverlaps(float dt)
+	{
+		foreach (var other in Battle.Entities)
+		{
+			if (other == this || !other.Alive) continue;
+			Vector3 away = Position - other.Position; away.Y = 0;
+			float distance = away.Length(), gap = Radius + other.Radius;
+			if (distance >= gap) continue;
+			if (distance < .001f) { away = new Vector3(Mathf.Cos(GetInstanceId() % 628 / 100f), 0, Mathf.Sin(GetInstanceId() % 628 / 100f)); distance = 1; }
+			float push = gap - distance;
+			push = other.IsBuilding ? Mathf.Min(push, 6 * dt) : push * .5f;
+			Position += away / distance * push;
+		}
+		float limit = Battle.MapSize / 2 - 3;
+		Position = new(Mathf.Clamp(Position.X, -limit, limit), 0, Mathf.Clamp(Position.Z, -limit, limit));
 	}
 
 	public void TakeDamage(float amount)

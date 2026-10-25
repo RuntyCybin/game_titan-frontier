@@ -32,6 +32,7 @@ ring_segments = 6
 [node name="Abrams" type="Node3D" unique_id=857757525]
 script = ExtResource("1_vgw0t")
 Kind = 1
+Radius = 1.45
 
 [node name="Body" parent="." instance=ExtResource("2_abrams")]
 
