@@ -106,6 +106,7 @@ public partial class CombatEntity : Node3D
 		_ring.Visible = Selected;
 		if (_rangeRing != null) _rangeRing.Visible = Selected && Damage > 0;
 		_cooldown -= dt;
+		if (!IsBuilding) ResolveOverlaps(dt);
 		if (Target != null && !Target.Alive) Target = null;
 		if (Target == null && Damage > 0 && (!Moving || AttackMove || IsBuilding)) Target = Battle.NearestEnemy(this, Range);
 		if (Target != null)
@@ -155,6 +156,26 @@ public partial class CombatEntity : Node3D
 		float limit = Battle.MapSize / 2 - 3;
 		Position = new(Mathf.Clamp(Position.X, -limit, limit), 0, Mathf.Clamp(Position.Z, -limit, limit));
 		Face(point, dt);
+	}
+
+	// Hard collision: after steering, push apart any vehicles whose footprints still overlap.
+	// Each unit corrects its own half against another unit; buildings never move, so the unit takes
+	// the whole push, eased so a vehicle leaving the headquarters door slides out instead of jumping.
+	private void ResolveOverlaps(float dt)
+	{
+		foreach (var other in Battle.Entities)
+		{
+			if (other == this || !other.Alive) continue;
+			Vector3 away = Position - other.Position; away.Y = 0;
+			float distance = away.Length(), gap = Radius + other.Radius;
+			if (distance >= gap) continue;
+			if (distance < .001f) { away = new Vector3(Mathf.Cos(GetInstanceId() % 628 / 100f), 0, Mathf.Sin(GetInstanceId() % 628 / 100f)); distance = 1; }
+			float push = gap - distance;
+			push = other.IsBuilding ? Mathf.Min(push, 6 * dt) : push * .5f;
+			Position += away / distance * push;
+		}
+		float limit = Battle.MapSize / 2 - 3;
+		Position = new(Mathf.Clamp(Position.X, -limit, limit), 0, Mathf.Clamp(Position.Z, -limit, limit));
 	}
 
 	public void TakeDamage(float amount)

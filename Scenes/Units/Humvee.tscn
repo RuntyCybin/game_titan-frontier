@@ -36,7 +36,7 @@ Speed = 10
 Range = 10
 Damage = 9
 FireInterval = 0.55
-Radius = 0.85
+Radius = 1.2
 
 [node name="Body" parent="." instance=ExtResource("2_body")]
 

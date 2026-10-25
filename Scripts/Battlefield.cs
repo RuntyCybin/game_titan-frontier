@@ -465,10 +465,12 @@ public partial class Battlefield : Node3D
 		var target = Entities.Where(e => e.Alive && e.Team == 1 && e.Position.DistanceTo(position) < e.Radius + 1)
 			.OrderBy(e => e.Position.DistanceSquaredTo(position)).FirstOrDefault();
 		int columns = Mathf.CeilToInt(Mathf.Sqrt(units.Length));
+		// Formation slots wide enough for the largest vehicle, so units do not fight over the same spot.
+		float spacing = Mathf.Max(3.2f, units.Max(e => e.Radius) * 2 + .6f), limit = MapSize / 2 - 3;
 		for (int i = 0; i < units.Length; i++)
 		{
 			units[i].Target = target;
-			units[i].Destination = new(Mathf.Clamp(position.X + (i % columns - (columns - 1) / 2f) * 3.2f, -55, 55), 0, Mathf.Clamp(position.Z + (i / columns) * 3.2f, -55, 55));
+			units[i].Destination = new(Mathf.Clamp(position.X + (i % columns - (columns - 1) / 2f) * spacing, -limit, limit), 0, Mathf.Clamp(position.Z + (i / columns) * spacing, -limit, limit));
 			units[i].Moving = true; units[i].AttackMove = attackMove;
 		}
 		if (units.Length > 0) Status = target != null ? "Objetivo fijado." : attackMove ? "Avanzando con ataque automático." : "Desplazamiento en formación.";
