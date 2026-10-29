@@ -4829,6 +4829,223 @@ scale = Vector3(1.6, 1.0, 1.0)
 mesh = SubResource("fx_unit")
 material_override = SubResource("fx_rock_dark")
 
+[node name="Rock110" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-53.3, 0.87, 87.2)
+rotation_degrees = Vector3(-2, 163, -4)
+scale = Vector3(1.4, 1.9, 3.6)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock111" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-57.2, 0.73, 80.9)
+rotation_degrees = Vector3(4, 2, 5)
+scale = Vector3(2.1, 1.6, 1.5)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock112" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-61.2, 0.40, 81.1)
+rotation_degrees = Vector3(4, 14, 1)
+scale = Vector3(3.3, 0.9, 1.5)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock113" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-48.6, 0.76, 79.3)
+rotation_degrees = Vector3(2, 35, -6)
+scale = Vector3(2.0, 1.7, 1.4)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock114" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-55.2, 0.50, 76.5)
+rotation_degrees = Vector3(3, 54, -3)
+scale = Vector3(3.6, 1.1, 3.7)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock115" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-53.7, 0.83, 81.0)
+rotation_degrees = Vector3(-6, 74, 4)
+scale = Vector3(1.7, 1.9, 2.4)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock116" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-45.1, 1.16, 60.0)
+rotation_degrees = Vector3(-4, 171, -3)
+scale = Vector3(2.0, 2.6, 2.9)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock117" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-50.6, 0.33, 57.1)
+rotation_degrees = Vector3(-1, 57, -3)
+scale = Vector3(4.0, 0.7, 1.8)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock118" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-44.8, 0.38, 54.6)
+rotation_degrees = Vector3(-4, 95, -1)
+scale = Vector3(3.5, 0.9, 3.3)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock119" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-42.5, 0.49, 66.0)
+rotation_degrees = Vector3(-4, 115, 3)
+scale = Vector3(2.0, 1.1, 2.5)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock120" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-38.6, 0.58, 64.8)
+rotation_degrees = Vector3(1, 61, -3)
+scale = Vector3(2.6, 1.3, 2.5)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock121" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-76.4, 0.72, 86.8)
+rotation_degrees = Vector3(-2, 140, -3)
+scale = Vector3(2.4, 1.6, 3.9)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock122" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-79.2, 0.38, 83.1)
+rotation_degrees = Vector3(3, 44, -4)
+scale = Vector3(1.9, 0.8, 1.6)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock123" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-73.9, 0.40, 84.4)
+rotation_degrees = Vector3(-2, 116, -4)
+scale = Vector3(3.3, 0.9, 3.4)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock124" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-44.4, 0.45, 81.5)
+rotation_degrees = Vector3(-2, 126, 2)
+scale = Vector3(3.8, 1.0, 1.4)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock125" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(-49.2, 0.35, 84.5)
+rotation_degrees = Vector3(-5, 101, 5)
+scale = Vector3(2.9, 0.8, 2.6)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock126" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(50.6, 0.31, -91.4)
+rotation_degrees = Vector3(2, 65, 3)
+scale = Vector3(3.3, 0.7, 1.4)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock127" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(53.0, 0.45, -84.8)
+rotation_degrees = Vector3(0, 101, 5)
+scale = Vector3(2.3, 1.0, 1.3)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock128" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(50.0, 0.52, -81.9)
+rotation_degrees = Vector3(-3, 111, -6)
+scale = Vector3(1.8, 1.2, 2.5)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock129" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(46.2, 0.65, -83.2)
+rotation_degrees = Vector3(-5, 19, -6)
+scale = Vector3(1.2, 1.4, 3.9)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock130" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(42.7, 0.29, -73.1)
+rotation_degrees = Vector3(-2, 121, -4)
+scale = Vector3(3.8, 0.6, 2.6)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock131" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(44.2, 0.36, -76.8)
+rotation_degrees = Vector3(2, 100, -3)
+scale = Vector3(3.9, 0.8, 2.8)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock132" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(47.2, 0.95, -73.2)
+rotation_degrees = Vector3(6, 175, -5)
+scale = Vector3(3.5, 2.1, 3.2)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock133" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(40.4, 0.67, -64.0)
+rotation_degrees = Vector3(-6, 76, -5)
+scale = Vector3(3.8, 1.5, 3.5)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock134" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(44.2, 0.85, -68.9)
+rotation_degrees = Vector3(2, 50, -6)
+scale = Vector3(2.2, 1.9, 2.8)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock135" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(40.6, 0.49, -70.1)
+rotation_degrees = Vector3(-2, 143, 5)
+scale = Vector3(2.3, 1.1, 3.0)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock136" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(82.2, 0.61, -94.6)
+rotation_degrees = Vector3(-6, 79, -5)
+scale = Vector3(3.2, 1.4, 2.8)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock137" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(85.0, 0.73, -90.8)
+rotation_degrees = Vector3(-5, 177, 2)
+scale = Vector3(1.8, 1.6, 3.3)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock138" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(83.4, 1.00, -86.5)
+rotation_degrees = Vector3(-5, 156, 3)
+scale = Vector3(3.8, 2.2, 3.1)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock")
+
+[node name="Rock139" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(87.1, 0.34, -87.5)
+rotation_degrees = Vector3(3, 124, 1)
+scale = Vector3(2.9, 0.8, 1.5)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
+[node name="Rock140" type="MeshInstance3D" parent="ScatteredRocks"]
+position = Vector3(87.6, 0.77, -82.4)
+rotation_degrees = Vector3(5, 67, 2)
+scale = Vector3(2.7, 1.7, 3.0)
+mesh = SubResource("fx_unit")
+material_override = SubResource("fx_rock_dark")
+
 [node name="Deposits" type="Node3D" parent="."]
 
 [node name="Deposit0" parent="Deposits" instance=ExtResource("1_deposit")]
