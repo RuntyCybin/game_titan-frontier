@@ -12,7 +12,8 @@ public partial class BattleHud : Control
     private Button _resume = null!;
     private Control _map = null!;
     private PanelContainer _build = null!;
-    private Label _buildHint = null!;
+    private Label _buildHint = null!, _trainHint = null!;
+    private HBoxContainer _trainButtons = null!;
     private readonly UnitKind[] _buildKinds = { UnitKind.Extractor, UnitKind.Headquarters };
     private readonly Label[] _ready = new Label[2];
     private readonly Button[] _buildButtons = new Button[2];
@@ -46,16 +47,20 @@ public partial class BattleHud : Control
         var info = new VBoxContainer { CustomMinimumSize = new(230, 0), SizeFlagsHorizontal = SizeFlags.ExpandFill }; columns.AddChild(info);
         Text(info, "CONTROL TÁCTICO", 12, Visuals.Cyan);
         _selection = Text(info, "", 17, Colors.White);
-        Text(info, "Arrastrar: seleccionar · Mayús: añadir\nClic derecho: mover / atacar\nF: avanzar atacando · X: detener\nWASD: cámara · Rueda: zoom\nTab: ejército · Espacio: base\nCtrl + 1–5: guardar grupo · 1–5: recuperar", 12, _muted);
+        Text(info, "Arrastrar: seleccionar · Mayús: añadir\nClic derecho: mover / atacar\nCentro de mando + clic derecho: punto de reunión\nF: avanzar atacando · X: detener\nWASD: cámara · Rueda: zoom\nTab: ejército · Espacio: base\nCtrl + 1–5: guardar grupo · 1–5: recuperar", 12, _muted);
         var production = new VBoxContainer { CustomMinimumSize = new(510, 0) }; columns.AddChild(production);
         Text(production, "FABRICACIÓN / DESPLIEGUE", 12, Visuals.Cyan);
-        var buttons = new HBoxContainer(); production.AddChild(buttons);
+        var buttons = _trainButtons = new HBoxContainer(); production.AddChild(buttons);
+        _trainHint = Text(production, "Selecciona un centro de mando para fabricar vehículos.", 13, _muted);
+        _trainHint.CustomMinimumSize = new(0, 98);
         TrainButton(buttons, UnitKind.Humvee, "[Q] HUMVEE\n300 · 4 s", "Vehículo ligero con ametralladora; rápido y barato.");
         TrainButton(buttons, UnitKind.Abrams, "[E] ABRAMS\n1000 · 7 s", "Blindado de primera línea.");
         TrainButton(buttons, UnitKind.Puma, "[T] PUMA\n600 · 5 s", "Vehículo de combate de infantería: ágil y económico.");
         TrainButton(buttons, UnitKind.Leopard, "[L] LEOPARD\n1500 · 8 s", "Carro de combate pesado con cañón de gran calibre.");
         TrainButton(buttons, UnitKind.Artillery, "[R] ARTILLERÍA\n2000 · 10 s", "Gran alcance y daño de área; frágil.");
         TrainButton(buttons, UnitKind.Truck, "[V] TRUCK\n800 · 6 s", "Constructor: selecciónalo para construir Extractores y Centros de mando.");
+        // Keep the column as wide as the buttons, so hiding them does not shift the panel.
+        production.CustomMinimumSize = new(Mathf.Max(510, buttons.GetCombinedMinimumSize().X), 0);
         _queue = Text(production, "", 13, _muted);
         _status = Text(production, "", 12, new("ffcc83"));
         _status.AutowrapMode = TextServer.AutowrapMode.WordSmart;
@@ -181,6 +186,8 @@ public partial class BattleHud : Control
         _resources.Text = $"◈ {Battle.Credits:N0} monedas   +{Battle.Income}/s   ·   Reservas {Battle.TotalReserve:N0}";
         _wave.Text = $"OLEADA {Battle.Wave + 1:00}   /   {Mathf.CeilToInt(Battle.NextWave):00}s";
         _selection.Text = Battle.Selection.Count == 1 ? Battle.Selection[0].DisplayName : $"{Battle.Selection.Count:00} UNIDADES SELECCIONADAS";
+        _trainButtons.Visible = Battle.HeadquartersSelected;
+        _trainHint.Visible = !_trainButtons.Visible;
         _queue.Text = Battle.Production.Count == 0 ? "COLA VACÍA  /  Producción disponible" : $"EN PRODUCCIÓN  /  {Battle.Production.Peek()} · {Battle.ProductionRemaining:0.0}s · {Battle.Production.Count}/8 en cola";
         _status.Text = Battle.BuildMode ? (Battle.PlaceTruck?.BuildKind == UnitKind.Extractor ? "COLOCAR EXTRACTOR: haz clic en un depósito. Esc cancela." : "COLOCAR CENTRO DE MANDO: haz clic en el terreno. Esc cancela.") : Battle.Status;
         var truck = SelectedTruck();
@@ -222,7 +229,14 @@ public partial class BattleHud : Control
             DrawRect(new(point - new Vector2(19, 3), new(38, 5)), new("0a151d"));
             DrawRect(new(point - new Vector2(18, 2), new(36 * entity.Health / entity.MaxHealth, 3)), entity.Team == 0 ? Visuals.Cyan : Visuals.Red);
         }
-        if (Battle.Entities.Count(e => e.Team == 0 && e.Kind == UnitKind.Headquarters) > 1 && !Battle.Camera.IsPositionBehind(Battle.PlayerBase.Position))
+        foreach (var headquarters in Battle.Selection.Where(e => e.Kind == UnitKind.Headquarters && e.Alive && e.Rally != null))
+        {
+            var target = Battlefield.RallyTargetOf(headquarters);
+            Vector3 end = target?.Position ?? headquarters.Rally!.Value;
+            if (Battle.Camera.IsPositionBehind(headquarters.Position) || Battle.Camera.IsPositionBehind(end)) continue;
+            DrawDashedLine(Battle.Camera.UnprojectPosition(headquarters.Position), Battle.Camera.UnprojectPosition(end), new Color(target != null ? Visuals.Red : Visuals.Cyan, .7f), 2, 10);
+        }
+        if (Battle.Entities.Count(e => e.Team == 0 && e.Kind == UnitKind.Headquarters) > 1 &&!Battle.Camera.IsPositionBehind(Battle.PlayerBase.Position))
         {
             Vector2 main = Battle.Camera.UnprojectPosition(Battle.PlayerBase.Position + new Vector3(0, 7.5f, 0));
             var font = GetThemeDefaultFont();

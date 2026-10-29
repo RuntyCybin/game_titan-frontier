@@ -27,12 +27,14 @@ public partial class Battlefield : Node3D
 	public Vector2 DragStart, DragEnd;
 	public bool Dragging;
 	public bool Paused => GetTree().Paused;
+	// Vehicle production is offered only while one of the player's headquarters is selected.
+	public bool HeadquartersSelected => Selection.Any(e => e.Team == 0 && e.Kind == UnitKind.Headquarters && e.Alive);
 	private Node3D _cameraRig = null!;
 	private bool _rotating;
 	private float _zoom = 50, _incomeTime;
 	private readonly RandomNumberGenerator _rng = new();
 	private readonly Dictionary<int, List<CombatEntity>> _groups = new();
-	private MeshInstance3D _buildPreview = null!;
+	private MeshInstance3D _buildPreview = null!, _rallyMarker = null!;
 	private bool _smokeTest;
 	private int _smokeFrames;
 	private int _previewFrames;
@@ -55,6 +57,7 @@ public partial class Battlefield : Node3D
 			Deposits.Add(ToLocal(deposit.GlobalPosition));
 		DepositReserve = Deposits.Select(_ => (float)DepositTotal).ToArray();
 		_buildPreview = Visuals.Ring(this, 2.8f, Visuals.Cyan); _buildPreview.Visible = false;
+		_rallyMarker = Visuals.Ring(this, 1.4f, Visuals.Cyan); _rallyMarker.Visible = false;
 		var canvas = new CanvasLayer(); AddChild(canvas);
 		Hud = new BattleHud { Battle = this }; canvas.AddChild(Hud);
 		_smokeTest = OS.GetCmdlineUserArgs().Contains("--smoke-test");
@@ -127,12 +130,7 @@ public partial class Battlefield : Node3D
 			ProductionRemaining -= dt;
 			if (ProductionRemaining <= 0)
 			{
-				var kind = Production.Dequeue();
-				// Vehicles roll out through the headquarters door (front face, -Z).
-				var unit = Spawn(kind, 0, PlayerBase.Position + PlayerBase.Basis * new Vector3(0, 0, -2.4f));
-				unit.Destination = PlayerBase.Position + PlayerBase.Basis * new Vector3(_rng.RandfRange(-8, 8), 0, -13);
-				OpenDoor(PlayerBase);
-				unit.Moving = true;
+				var unit = RollOut(Production.Dequeue());
 				ProductionRemaining = Production.Count > 0 ? BuildTime(Production.Peek()) : 0;
 				Status = unit.DisplayName + " listo para recibir órdenes.";
 			}
@@ -140,7 +138,8 @@ public partial class Battlefield : Node3D
 		NextWave -= dt;
 		if (NextWave <= 0) LaunchWave();
 		TickConstruction(dt);
-		if (BuildMode && (PlaceTruck == null || !IsInstanceValid(PlaceTruck) || !PlaceTruck.Alive)) { BuildMode = false; PlaceTruck = null; }
+		UpdateRallyMarker();
+		if (BuildMode &&(PlaceTruck == null || !IsInstanceValid(PlaceTruck) || !PlaceTruck.Alive)) { BuildMode = false; PlaceTruck = null; }
 		_buildPreview.Visible = BuildMode;
 		if (BuildMode)
 		{
@@ -364,6 +363,54 @@ public partial class Battlefield : Node3D
 		Status = "Centro de mando principal cambiado: los vehículos saldrán de aquí.";
 	}
 
+	// Vehicles roll out through the main headquarters door (front face, -Z), then head for its rally.
+	private CombatEntity RollOut(UnitKind kind)
+	{
+		var unit = Spawn(kind, 0, PlayerBase.Position + PlayerBase.Basis * new Vector3(0, 0, -2.4f));
+		OpenDoor(PlayerBase);
+		unit.Moving = true;
+		if (RallyTargetOf(PlayerBase) is { } target && unit.Damage > 0) { unit.Target = target; unit.Destination = target.Position; }
+		else if (PlayerBase.Rally is { } rally) { unit.Destination = rally; unit.AttackMove = PlayerBase.RallyTarget != null && unit.Damage > 0; }
+		else unit.Destination = PlayerBase.Position + PlayerBase.Basis * new Vector3(_rng.RandfRange(-8, 8), 0, -13);
+		return unit;
+	}
+
+	public static CombatEntity? RallyTargetOf(CombatEntity headquarters) =>
+		headquarters.RallyTarget is { } target && IsInstanceValid(target) && target.Alive ? target : null;
+
+	// Right-click with headquarters selected: their new vehicles drive to that point, or attack the enemy
+	// clicked there. Right-clicking one of those headquarters clears the rally.
+	public void SetRally(Vector3 position)
+	{
+		var bases = Selection.Where(e => e.Alive && e.Team == 0 && e.Kind == UnitKind.Headquarters).ToArray();
+		if (bases.Length == 0) return;
+		bool clear = bases.Any(b => b.Position.DistanceTo(position) < b.Radius + 1);
+		var target = clear ? null : EnemyAt(position);
+		float limit = MapSize / 2 - 3;
+		foreach (var headquarters in bases)
+		{
+			headquarters.Rally = clear ? null : new(Mathf.Clamp(position.X, -limit, limit), 0, Mathf.Clamp(position.Z, -limit, limit));
+			headquarters.RallyTarget = target;
+		}
+		Status = clear ? "Punto de reunión eliminado: los vehículos esperarán junto a la puerta."
+			: target != null ? $"Punto de reunión: los vehículos nuevos atacarán {target.DisplayName} enemigo."
+			: "Punto de reunión fijado: los vehículos nuevos irán allí.";
+		if (target != null) MarkTarget(target);
+		else if (!clear) MarkGround(position, Visuals.Cyan);
+	}
+
+	private void UpdateRallyMarker()
+	{
+		var headquarters = Selection.FirstOrDefault(e => e.Kind == UnitKind.Headquarters && e.Alive && e.Rally != null);
+		_rallyMarker.Visible = headquarters != null;
+		if (headquarters == null) return;
+		var target = RallyTargetOf(headquarters);
+		_rallyMarker.Position = (target?.Position ?? headquarters.Rally!.Value) + new Vector3(0, .12f, 0);
+		_rallyMarker.Scale = Vector3.One * (target != null ? (target.Radius + .6f) / 1.4f : 1);
+		var material = (StandardMaterial3D)_rallyMarker.MaterialOverride;
+		material.AlbedoColor = material.Emission = target != null ? Visuals.Red : Visuals.Cyan;
+	}
+
 	public void CenterCamera(Vector3 position) => _cameraRig.Position = new(position.X, 0, position.Z);
 
 	public override void _Input(InputEvent input)
@@ -410,19 +457,19 @@ public partial class Battlefield : Node3D
 			{
 				if (BuildMode || AttackOrder) { BuildMode = false; AttackOrder = false; }
 				else if (mouse.DoubleClick && HeadquartersAt(mouse.Position) is { } headquarters) SetMainBase(headquarters);
-				else IssueOrder(GroundPoint(mouse.Position), false);
+				else { IssueOrder(GroundPoint(mouse.Position), false); SetRally(GroundPoint(mouse.Position)); }
 			}
 		}
 		if (input is InputEventKey key && key.Pressed && !key.Echo)
 		{
 			switch (key.Keycode)
 			{
-				case Key.Q: Train(UnitKind.Humvee); break;
-				case Key.E: Train(UnitKind.Abrams); break;
-				case Key.T: Train(UnitKind.Puma); break;
-				case Key.L: Train(UnitKind.Leopard); break;
-				case Key.R: Train(UnitKind.Artillery); break;
-				case Key.V: Train(UnitKind.Truck); break;
+				case Key.Q when HeadquartersSelected: Train(UnitKind.Humvee); break;
+				case Key.E when HeadquartersSelected: Train(UnitKind.Abrams); break;
+				case Key.T when HeadquartersSelected: Train(UnitKind.Puma); break;
+				case Key.L when HeadquartersSelected: Train(UnitKind.Leopard); break;
+				case Key.R when HeadquartersSelected: Train(UnitKind.Artillery); break;
+				case Key.V when HeadquartersSelected: Train(UnitKind.Truck); break;
 				case Key.F: AttackOrder = true; BuildMode = false; Status = "Haz clic en el destino para avanzar atacando."; break;
 				case Key.X: foreach (var unit in Selection) { unit.Moving = false; unit.Target = null; } break;
 				case Key.Space: CenterCamera(PlayerBase.Position); break;
@@ -463,8 +510,7 @@ public partial class Battlefield : Node3D
 		if (Ended || Paused) return;
 		var units = Selection.Where(e => e.Alive && e.Team == 0 && !e.IsBuilding).ToArray();
 		if (units.Length == 0) return;
-		var target = Entities.Where(e => e.Alive && e.Team == 1 && e.Position.DistanceTo(position) < e.Radius + 1)
-			.OrderBy(e => e.Position.DistanceSquaredTo(position)).FirstOrDefault();
+		var target = EnemyAt(position);
 		// Single-file column: the vehicle nearest the destination leads, each other one follows the one
 		// ahead of it, and they stop in a line ending at the clicked point.
 		var centre = units.Aggregate(Vector3.Zero, (sum, e) => sum + e.Position) / units.Length;
@@ -485,19 +531,28 @@ public partial class Battlefield : Node3D
 			unit.Moving = true; unit.AttackMove = attackMove;
 		}
 		if (units.Length > 0) Status = target != null ? "Objetivo fijado." : attackMove ? "Avanzando con ataque automático." : "Desplazamiento en columna.";
-		if (target != null)
+		if (target != null) MarkTarget(target);
+		else MarkGround(position, attackMove ? Visuals.Red : Visuals.Cyan);
+	}
+
+	private CombatEntity? EnemyAt(Vector3 position) => Entities.Where(e => e.Alive && e.Team == 1 && e.Position.DistanceTo(position) < e.Radius + 1)
+		.OrderBy(e => e.Position.DistanceSquaredTo(position)).FirstOrDefault();
+
+	private void MarkTarget(CombatEntity target)
+	{
+		var click = target.GetNodeOrNull<AttackClick>("AttackClick");
+		if (click == null || click.IsQueuedForDeletion())
 		{
-			var click = target.GetNodeOrNull<AttackClick>("AttackClick");
-			if (click == null || click.IsQueuedForDeletion())
-			{
-				if (click != null) click.Name = "ExpiredAttackClick";
-				click = GD.Load<PackedScene>("res://Scenes/Effects/AttackClick.tscn").Instantiate<AttackClick>();
-				target.AddChild(click);
-			}
-			click.Play(target.Radius);
-			return;
+			if (click != null) click.Name = "ExpiredAttackClick";
+			click = GD.Load<PackedScene>("res://Scenes/Effects/AttackClick.tscn").Instantiate<AttackClick>();
+			target.AddChild(click);
 		}
-		var marker = Visuals.Ring(this, 1, attackMove ? Visuals.Red : Visuals.Cyan); marker.Position = position + new Vector3(0, .12f, 0);
+		click.Play(target.Radius);
+	}
+
+	private void MarkGround(Vector3 position, Color color)
+	{
+		var marker = Visuals.Ring(this, 1, color); marker.Position = position + new Vector3(0, .12f, 0);
 		var tween = CreateTween(); tween.TweenProperty(marker, "scale", Vector3.One * .1f, .6); tween.TweenCallback(Callable.From(marker.QueueFree));
 	}
 
@@ -558,6 +613,19 @@ public partial class Battlefield : Node3D
 			enemy.TakeDamage(999);
 			if (Entities.Contains(enemy)) throw new Exception("Death cleanup");
 			if (Credits != creditsBeforeKill + Cost(UnitKind.Humvee) / 10) throw new Exception("Kill bounty");
+			var rallyEnemy = Spawn(UnitKind.Humvee, 1, PlayerBase.Position + new Vector3(30, 0, -30));
+			SetSelection(new[] { PlayerBase });
+			SetRally(rallyEnemy.Position);
+			var rallied = RollOut(UnitKind.Abrams);
+			if (PlayerBase.RallyTarget != rallyEnemy || rallied.Target != rallyEnemy) throw new Exception("Rally attack");
+			var rallyTruck = RollOut(UnitKind.Truck);
+			if (rallyTruck.Target != null || rallyTruck.Destination != PlayerBase.Rally) throw new Exception("Rally truck");
+			SetRally(PlayerBase.Position + new Vector3(10, 0, -20));
+			var rallyGround = RollOut(UnitKind.Humvee);
+			if (PlayerBase.RallyTarget != null || rallyGround.Target != null || rallyGround.Destination != PlayerBase.Rally) throw new Exception("Rally point");
+			SetRally(PlayerBase.Position);
+			if (PlayerBase.Rally != null) throw new Exception("Rally clear");
+			foreach (var extra in new[] { rallied, rallyTruck, rallyGround, rallyEnemy }) { Entities.Remove(extra); extra.QueueFree(); }
 			SetSelection(Entities.Where(e => e.Team == 0 && !e.IsBuilding));
 			IssueOrder(PlayerBase.Position + new Vector3(24, 0, -8), false);
 			LaunchWave();

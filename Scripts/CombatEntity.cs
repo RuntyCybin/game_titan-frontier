@@ -31,6 +31,9 @@ public partial class CombatEntity : Node3D
 	public UnitKind? BuildKind;
 	public float BuildRemaining;
 	public bool BuildReady;
+	// Headquarters rally: where new vehicles drive after rolling out, or the enemy they go to attack.
+	public Vector3? Rally;
+	public CombatEntity? RallyTarget;
 	public bool IsBuilding => Kind == UnitKind.Headquarters || Kind == UnitKind.Extractor;
 	public bool Alive => Health > 0 && !IsQueuedForDeletion();
 	public string DisplayName => Kind switch { UnitKind.Humvee => "HUMVEE", UnitKind.Abrams => "ABRAMS", UnitKind.Artillery => "ARTILLERÍA", UnitKind.Puma => "PUMA", UnitKind.Leopard => "LEOPARD", UnitKind.Truck => "TRUCK", UnitKind.Headquarters => "CENTRO DE MANDO", _ => "EXTRACTOR" };
