@@ -37,7 +37,7 @@ public partial class BattleHud : Control
         Text(objectives, "01  /  ROMPER EL FRENTE", 15, Colors.White);
         Text(objectives, Battle.ObjectiveText, 13, _muted);
 
-        var bottom = Panel(new(0, 1), new(1, 1), new(18, -192, -18, -18));
+        var bottom = Panel(new(0, 1), new(1, 1), new(18, -224, -18, -18));
         var columns = new HBoxContainer(); columns.AddThemeConstantOverride("separation", 22); bottom.AddChild(columns);
         _map = new Control { CustomMinimumSize = new(148, 148), MouseFilter = MouseFilterEnum.Stop };
         columns.AddChild(_map);
@@ -50,18 +50,18 @@ public partial class BattleHud : Control
         var production = new VBoxContainer { CustomMinimumSize = new(510, 0) }; columns.AddChild(production);
         Text(production, "FABRICACIÓN / DESPLIEGUE", 12, Visuals.Cyan);
         var buttons = new HBoxContainer(); production.AddChild(buttons);
-        Button(buttons, "[Q] HUMVEE\n300 · 4 s", "Vehículo ligero con ametralladora; rápido y barato.", () => Battle.Train(UnitKind.Humvee));
-        Button(buttons, "[E] ABRAMS\n1000 · 7 s", "Blindado de primera línea.", () => Battle.Train(UnitKind.Abrams));
-        Button(buttons, "[T] PUMA\n600 · 5 s", "Vehículo de combate de infantería: ágil y económico.", () => Battle.Train(UnitKind.Puma));
-        Button(buttons, "[L] LEOPARD\n1500 · 8 s", "Carro de combate pesado con cañón de gran calibre.", () => Battle.Train(UnitKind.Leopard));
-        Button(buttons, "[R] ARTILLERÍA\n2000 · 10 s", "Gran alcance y daño de área; frágil.", () => Battle.Train(UnitKind.Artillery));
-        Button(buttons, "[V] TRUCK\n800 · 6 s", "Constructor: selecciónalo para construir Extractores y Centros de mando.", () => Battle.Train(UnitKind.Truck));
+        TrainButton(buttons, UnitKind.Humvee, "[Q] HUMVEE\n300 · 4 s", "Vehículo ligero con ametralladora; rápido y barato.");
+        TrainButton(buttons, UnitKind.Abrams, "[E] ABRAMS\n1000 · 7 s", "Blindado de primera línea.");
+        TrainButton(buttons, UnitKind.Puma, "[T] PUMA\n600 · 5 s", "Vehículo de combate de infantería: ágil y económico.");
+        TrainButton(buttons, UnitKind.Leopard, "[L] LEOPARD\n1500 · 8 s", "Carro de combate pesado con cañón de gran calibre.");
+        TrainButton(buttons, UnitKind.Artillery, "[R] ARTILLERÍA\n2000 · 10 s", "Gran alcance y daño de área; frágil.");
+        TrainButton(buttons, UnitKind.Truck, "[V] TRUCK\n800 · 6 s", "Constructor: selecciónalo para construir Extractores y Centros de mando.");
         _queue = Text(production, "", 13, _muted);
         _status = Text(production, "", 12, new("ffcc83"));
         _status.AutowrapMode = TextServer.AutowrapMode.WordSmart;
         _status.CustomMinimumSize = new(490, 36);
 
-        _build = Panel(new(1, 1), new(1, 1), new(-398, -346, -18, -202));
+        _build = Panel(new(1, 1), new(1, 1), new(-398, -378, -18, -234));
         var buildColumn = new VBoxContainer(); _build.AddChild(buildColumn);
         _buildHint = Text(buildColumn, "CONSTRUCCIÓN / TRUCK", 12, Visuals.Cyan);
         var slots = new HBoxContainer(); slots.AddThemeConstantOverride("separation", 12); buildColumn.AddChild(slots);
@@ -119,6 +119,41 @@ public partial class BattleHud : Control
     {
         var label = new Label { Text = value, MouseFilter = MouseFilterEnum.Ignore, VerticalAlignment = VerticalAlignment.Center };
         label.AddThemeFontSizeOverride("font_size", size); label.AddThemeColorOverride("font_color", color); parent.AddChild(label); return label;
+    }
+
+    private void TrainButton(Node parent, UnitKind kind, string caption, string tooltip)
+    {
+        var button = Button(parent, caption, tooltip, () => Battle.Train(kind));
+        button.Icon = Thumbnail(kind);
+        button.IconAlignment = HorizontalAlignment.Center;
+        button.VerticalIconAlignment = VerticalAlignment.Top;
+        button.CustomMinimumSize = new(120, 98);
+    }
+
+    // Renders the unit once, in its own small 3D world, so each production button shows what it builds.
+    private Texture2D Thumbnail(UnitKind kind)
+    {
+        var viewport = new SubViewport { Size = new(96, 48), OwnWorld3D = true, TransparentBg = true, Msaa3D = Viewport.Msaa.Msaa4X, RenderTargetUpdateMode = SubViewport.UpdateMode.Once };
+        AddChild(viewport);
+        var environment = new Godot.Environment { AmbientLightSource = Godot.Environment.AmbientSource.Color, AmbientLightColor = new("8fa4ad"), AmbientLightEnergy = .6f };
+        viewport.AddChild(new WorldEnvironment { Environment = environment });
+        viewport.AddChild(new DirectionalLight3D { RotationDegrees = new(-50, 35, 0), LightEnergy = 1.2f });
+        var unit = Battle.SceneFor(kind).Instantiate<CombatEntity>();
+        viewport.AddChild(unit);
+        Aabb? bounds = null;
+        foreach (MeshInstance3D mesh in unit.GetNode("Body").FindChildren("*", "MeshInstance3D", true, false))
+        {
+            var box = mesh.GlobalTransform * mesh.GetAabb();
+            bounds = bounds?.Merge(box) ?? box;
+        }
+        var center = bounds!.Value.GetCenter();
+        float radius = bounds.Value.Size.Length() / 2;
+        // Three-quarter view of the front (units face -Z), framed to the model's size.
+        var camera = new Camera3D { Fov = 30, KeepAspect = Camera3D.KeepAspectEnum.Width, Current = true };
+        viewport.AddChild(camera);
+        camera.Position = center + new Vector3(.9f, .55f, -1).Normalized() * radius / Mathf.Sin(Mathf.DegToRad(15)) * .9f;
+        camera.LookAt(center);
+        return viewport.GetTexture();
     }
 
     private static Button Button(Node parent, string caption, string tooltip, System.Action pressed)
@@ -215,7 +250,7 @@ public partial class BattleHud : Control
         foreach (var deposit in Battle.Deposits) _map.DrawCircle(ToMap(deposit), 3, Battle.DepositReserve[Battle.DepositIndex(deposit)] > 0 ? new("ffcc83") : new("4a4a4a"));
         foreach (var entity in Battle.Entities) _map.DrawCircle(ToMap(entity.Position), entity.IsBuilding ? 4 : 2, entity.Team == 0 ? Visuals.Cyan : Visuals.Red);
         var viewport = GetViewportRect().Size;
-        var corners = new[] { new Vector2(0, 86), new Vector2(viewport.X, 86), new Vector2(viewport.X, viewport.Y - 192), new Vector2(0, viewport.Y - 192) };
+        var corners = new[] { new Vector2(0, 86), new Vector2(viewport.X, 86), new Vector2(viewport.X, viewport.Y - 224), new Vector2(0, viewport.Y - 224) };
         for (int i = 0; i < 4; i++)
         {
             Vector2 a = ToMap(Battle.GroundPoint(corners[i])).Clamp(mapRect.Position, mapRect.End);

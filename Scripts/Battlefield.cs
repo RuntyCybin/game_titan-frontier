@@ -73,15 +73,16 @@ public partial class Battlefield : Node3D
 	[Export] public PackedScene HeadquartersScene { get; set; } = null!;
 	[Export] public PackedScene ExtractorScene { get; set; } = null!;
 
+	public PackedScene SceneFor(UnitKind kind) => kind switch
+	{
+		UnitKind.Humvee => HumveeScene, UnitKind.Abrams => AbramsScene,
+		UnitKind.Artillery => ArtilleryScene, UnitKind.Puma => PumaScene, UnitKind.Leopard => LeopardScene, UnitKind.Truck => TruckScene, UnitKind.Headquarters => HeadquartersScene,
+		_ => ExtractorScene
+	};
+
 	public CombatEntity Spawn(UnitKind kind, int team, Vector3 position)
 	{
-		var scene = kind switch
-		{
-			UnitKind.Humvee => HumveeScene, UnitKind.Abrams => AbramsScene,
-			UnitKind.Artillery => ArtilleryScene, UnitKind.Puma => PumaScene, UnitKind.Leopard => LeopardScene, UnitKind.Truck => TruckScene, UnitKind.Headquarters => HeadquartersScene,
-			_ => ExtractorScene
-		};
-		var entity = scene.Instantiate<CombatEntity>();
+		var entity = SceneFor(kind).Instantiate<CombatEntity>();
 		entity.Battle = this; entity.Team = team; entity.Position = position;
 		Entities.Add(entity); AddChild(entity);
 		return entity;
