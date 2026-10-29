@@ -13,6 +13,7 @@
 
 [node name="Battlefield" type="Node3D" unique_id=452883815]
 script = ExtResource("1")
+MapSize = 240.0
 HumveeScene = ExtResource("3_humvee")
 AbramsScene = ExtResource("4_abrams")
 ArtilleryScene = ExtResource("5_artillery")
@@ -25,7 +26,7 @@ ExtractorScene = ExtResource("7_extractor")
 [node name="Map" parent="." unique_id=430292744 instance=ExtResource("2_map")]
 
 [node name="CameraRig" type="Node3D" parent="." unique_id=1603901786]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, 38.88315)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -58, 0, 72.3821)
 
 [node name="Camera3D" type="Camera3D" parent="CameraRig" unique_id=1101159582]
 transform = Transform3D(1, 0, 0, 0, 0.60691357, 0.79476786, 0, -0.79476786, 0.60691357, 0, 55, 42)
@@ -35,14 +36,14 @@ size = 50.0
 far = 350.0
 
 [node name="PlayerHeadquarters" parent="." unique_id=2084045006 instance=ExtResource("6_hq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34, 0, 33.498955)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68, 0, 66.9979)
 MaxHealth = 1800.0
 Speed = 0.0
 Range = 18.0
 Damage = 22.0
 
 [node name="EnemyHeadquarters" parent="." unique_id=1768378906 instance=ExtResource("6_hq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 0, -35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 70, 0, -70)
 Team = 1
 MaxHealth = 1800.0
 Speed = 0.0
@@ -50,7 +51,7 @@ Range = 18.0
 Damage = 22.0
 
 [node name="PlayerExtractor" parent="." unique_id=278747609 instance=ExtResource("7_extractor")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -43, 0, 24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -86, 0, 48)
 MaxHealth = 350.0
 Speed = 0.0
 Damage = 0.0
@@ -58,7 +59,7 @@ FireInterval = 1.0
 Radius = 2.0
 
 [node name="EnemyExtractor" parent="." unique_id=1007919121 instance=ExtResource("7_extractor")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44, 0, -26)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 88, 0, -52)
 Team = 1
 MaxHealth = 350.0
 Speed = 0.0
@@ -67,28 +68,28 @@ FireInterval = 1.0
 Radius = 2.0
 
 [node name="PlayerAbrams1" parent="." unique_id=144379491 instance=ExtResource("4_abrams")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -64, 0, 58.499)
 
 [node name="PlayerAbrams2" parent="." unique_id=1802242786 instance=ExtResource("4_abrams")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 0, 27)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59, 0, 60.499)
 
 [node name="PlayerHumvee" parent="." unique_id=1781248586 instance=ExtResource("3_humvee")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 0, 23)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -69, 0, 56.499)
 MaxHealth = 80.0
 Speed = 10.0
 Range = 10.0
 Damage = 9.0
 
 [node name="PlayerArtillery" parent="." unique_id=919650565 instance=ExtResource("5_artillery")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0, 31)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -63, 0, 64.499)
 MaxHealth = 110.0
 Range = 23.0
 Damage = 48.0
 
 [node name="EnemyAbrams1" parent="." unique_id=802067588 instance=ExtResource("4_abrams")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 0, -30)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 63, 0, -65)
 Team = 1
 
 [node name="EnemyAbrams2" parent="." unique_id=895594290 instance=ExtResource("4_abrams")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 34, 0, -26)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69, 0, -61)
 Team = 1

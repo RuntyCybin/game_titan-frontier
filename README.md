@@ -16,9 +16,9 @@ El proyecto arranca en **Scenes/UI/MainMenu.tscn**. Hay tres escenarios disponib
 
 | Mapa | Distribución | Escena de partida |
 | --- | --- | --- |
-| Frontera de Titanio | Zona industrial; 5 depósitos; bases al suroeste y noreste | `Scenes/Main.tscn` |
-| Cuenca de Ámbar | Llanura desértica; 7 depósitos; bases al oeste y este, con recursos al norte y sur | `Scenes/AmberSkirmish.tscn` |
-| Valle Esmeralda | Pradera verde con bosques; 240 × 240 m (el doble que los otros); 15 depósitos; bases al oeste y este | `Scenes/EmeraldSkirmish.tscn` |
+| Frontera de Titanio | Zona industrial con carreteras, caminos de tierra, bosques y rocas; 240 × 240 m; 5 depósitos; bases al suroeste y noreste | `Scenes/Main.tscn` |
+| Cuenca de Ámbar | Llanura desértica; 240 × 240 m; 7 depósitos; bases al oeste y este, con recursos al norte y sur | `Scenes/AmberSkirmish.tscn` |
+| Valle Esmeralda | Pradera verde con bosques; 480 × 480 m (el doble que los otros); 15 depósitos; bases al oeste y este | `Scenes/EmeraldSkirmish.tscn` |
 
 Las vistas tácticas del menú leen las posiciones de bases y depósitos de las escenas reales. Selecciona una tarjeta y pulsa **Iniciar escaramuza**. El menú admite navegación con Tab y activación con Enter/Espacio. **Salir** cierra el juego.
 
@@ -86,7 +86,7 @@ Selecciona la raíz de una unidad o edificio para editar **Team**, **Max Health*
 
 Dentro de **Body** puedes mover o cambiar las mallas de casco, torreta, cañón y otros componentes. Los componentes con metadato `team_role` reciben los colores de facción automáticamente. El indicador `AttackRange` permite ajustar el material (por ejemplo, su opacidad); su radio se controla con **Range**. Conserva los nodos `Body`, `SelectionRing` y `AttackRange`, utilizados por el script.
 
-Edita una escena de unidad para cambiar todas sus instancias, incluidas las que se produzcan después. Para modificar solo un vehículo inicial, selecciona su instancia en `Main.tscn` y cambia sus propiedades allí. Puedes duplicar unidades iniciales como hijos directos de `Battlefield` y moverlas; la partida las registra automáticamente. Mantén un centro de mando por equipo. Para mover o duplicar depósitos, edita los hijos de `Deposits` en la escena del mapa. La partida lee esas posiciones al arrancar. El tamaño jugable sigue siendo de 120 × 120 m.
+Edita una escena de unidad para cambiar todas sus instancias, incluidas las que se produzcan después. Para modificar solo un vehículo inicial, selecciona su instancia en `Main.tscn` y cambia sus propiedades allí. Puedes duplicar unidades iniciales como hijos directos de `Battlefield` y moverlas; la partida las registra automáticamente. Mantén un centro de mando por equipo. Para mover o duplicar depósitos, edita los hijos de `Deposits` en la escena del mapa. La partida lee esas posiciones al arrancar. El tamaño jugable lo fija la propiedad `MapSize` del nodo `Battlefield` de cada escena: 240 × 240 m en Frontera de Titanio y Cuenca de Ámbar, 480 × 480 m en Valle Esmeralda.
 
 Los cambios en escenas se ven en el editor al guardarlos; los cambios en código C# requieren compilar. Reinicia la partida para aplicar cambios a una partida nueva. La interfaz y los efectos temporales de disparos siguen creándose al ejecutar.
 

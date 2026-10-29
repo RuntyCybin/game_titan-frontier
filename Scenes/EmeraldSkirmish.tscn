@@ -13,7 +13,7 @@
 
 [node name="Battlefield" type="Node3D"]
 script = ExtResource("1")
-MapSize = 240.0
+MapSize = 480.0
 MapTitle = "VALLE ESMERALDA"
 ObjectiveText = "Destruye el mando enemigo al este, al otro lado del bosque."
 HumveeScene = ExtResource("3_humvee")
@@ -28,7 +28,7 @@ ExtractorScene = ExtResource("7_extractor")
 [node name="Map" parent="." instance=ExtResource("2_map")]
 
 [node name="CameraRig" type="Node3D" parent="."]
-position = Vector3(-80, 0, 36)
+position = Vector3(-170, 0, 76)
 
 [node name="Camera3D" type="Camera3D" parent="CameraRig"]
 position = Vector3(0, 55, 42)
@@ -39,35 +39,35 @@ size = 50.0
 far = 350.0
 
 [node name="PlayerHeadquarters" parent="." instance=ExtResource("6_hq")]
-position = Vector3(-90, 0, 40)
+position = Vector3(-180, 0, 80)
 
 [node name="EnemyHeadquarters" parent="." instance=ExtResource("6_hq")]
-position = Vector3(90, 0, -40)
+position = Vector3(180, 0, -80)
 Team = 1
 
 [node name="PlayerExtractor" parent="." instance=ExtResource("7_extractor")]
-position = Vector3(-98, 0, 30)
+position = Vector3(-196, 0, 60)
 
 [node name="EnemyExtractor" parent="." instance=ExtResource("7_extractor")]
-position = Vector3(99, 0, -30)
+position = Vector3(198, 0, -60)
 Team = 1
 
 [node name="PlayerAbrams1" parent="." instance=ExtResource("4_abrams")]
-position = Vector3(-86, 0, 31)
+position = Vector3(-176, 0, 71)
 
 [node name="PlayerAbrams2" parent="." instance=ExtResource("4_abrams")]
-position = Vector3(-81, 0, 33)
+position = Vector3(-171, 0, 73)
 
 [node name="PlayerHumvee" parent="." instance=ExtResource("3_humvee")]
-position = Vector3(-91, 0, 29)
+position = Vector3(-181, 0, 69)
 
 [node name="PlayerArtillery" parent="." instance=ExtResource("5_artillery")]
-position = Vector3(-85, 0, 37)
+position = Vector3(-175, 0, 77)
 
 [node name="EnemyAbrams1" parent="." instance=ExtResource("4_abrams")]
-position = Vector3(83, 0, -35)
+position = Vector3(173, 0, -75)
 Team = 1
 
 [node name="EnemyAbrams2" parent="." instance=ExtResource("4_abrams")]
-position = Vector3(89, 0, -31)
+position = Vector3(179, 0, -71)
 Team = 1
